@@ -200,9 +200,7 @@ for (let p in program_containers) {
 		add_el_events(program_id);
 	}
 
-
 	let editoresque = new Misbehave(document.querySelector("#" + program_id + " div" + ".code_area"));
-
 
 	$("#" + program_id + " div" + ".code_area").on('keydown',
 	_.debounce(function() {
@@ -245,8 +243,21 @@ function add_el_events(program_id) {
 				update_breakpoints();
 			});
 		}
-		$('#' + program_id + ' #' + expressions[i].exp_i).click(function() {
+		$('#' + program_id + ' #step_' + expressions[i].exp_i).click(function() {
+
+			clear_highlight();
+			step(expressions[i].state, expressions[i].state_stack);
+			highlight(expressions[i].state);
+
 			console.log("step button");
+		});
+		$('#' + program_id + ' #step_over_' + expressions[i].exp_i).click(function() {
+
+			clear_highlight();
+			do_step_over(expressions[i].state, expressions[i].state_stack, "over");
+			highlight(expressions[i].state);
+
+			console.log("step over button");
 		});
 	}
 	for (let i in functions) {
@@ -356,7 +367,7 @@ function do_step(program_id, type = "") {
 			}
 		}
 	} else {
-		if ((type == "") || (type == "over" && !expressions[i].state.fn_element) ||
+		if ((type == "") || (type == "over" && !stepping_state.fn_element) ||
 			(type == "out" && !expressions[i].state.fn)) {
 			console.log("just step3", type, stepping_state_stack.length);
 			let r = step(stepping_state, stepping_state_stack);
@@ -375,9 +386,6 @@ function do_step_over(state, state_stack, type) {
 		let r = step(state, state_stack);
 		console.log("next step", i, state_stack.length, r)
 		if (r.finished) break;
-		// if (init_depth == 0) {
-		// 	return;
-		// }
 		if (type == "over") {
 			if (state_stack.length <= init_depth || state_stack.length == 0) {
 				step(state, state_stack);
@@ -393,30 +401,6 @@ function do_step_over(state, state_stack, type) {
 		}
 	}
 }
-//
-// function do_step(program_id) {
-// 	clear_highlight(program_id);
-// 	if (select_program(program_id)) return;
-// 	if (was_paused || running) {
-// 		// step all
-// 		for (let i in expressions) {
-// 			expressions[i].state.select_expression = i;
-// 			if (expressions[i].hasOwnProperty("interval")) {
-// 				step(expressions[i].state, expressions[i].state_stack);
-// 				console.log("step", expressions[i].state_stack.length)
-// 				highlight(expressions[i].state);
-// 			} else {
-// 				if (!expressions[i].state.finished_expression) {
-// 					step(expressions[i].state, expressions[i].state_stack);
-// 					highlight(expressions[i].state);
-// 				}
-// 			}
-// 		}
-// 	} else {
-// 		step(stepping_state, stepping_state_stack);
-// 		highlight(stepping_state);
-// 	}
-// }
 
 $(".stop").click(function() {
 	stop_running();

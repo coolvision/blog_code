@@ -47,8 +47,8 @@ export function highlight(state) {
 		// 	$('#' + state.program_id + ' #' + el.id).addClass('bg-washed-red');
 		// }
 	} else {
-		if (state.select_expression >= 0) {
-			exp = expressions[state.select_expression].el;
+		if (state.select_expression_i >= 0) {
+			exp = expressions[state.select_expression_i].el;
 		}
 		if (state.el_i >= 0 && state.el_i < exp.length) {
 			let el = exp[state.el_i];
@@ -86,9 +86,9 @@ export function step(state, state_stack) {
 		state.switch_fn = false;
 
 		let exp = expressions[state.exp_i].el;
-		if (state.select_expression >= 0) {
-			state.exp_i = state.select_expression;
-			exp = expressions[state.select_expression].el;
+		if (state.select_expression_i >= 0) {
+			state.exp_i = state.select_expression_i;
+			exp = expressions[state.select_expression_i].el;
 		}
 
 		if (state.fn) {
@@ -224,9 +224,9 @@ export function step(state, state_stack) {
 		}
 
 		let exp = expressions[state.exp_i].el;
-		if (state.select_expression >= 0) {
-			state.exp_i = state.select_expression;
-			exp = expressions[state.select_expression].el;
+		if (state.select_expression_i >= 0) {
+			state.exp_i = state.select_expression_i;
+			exp = expressions[state.select_expression_i].el;
 		}
 
 		if (state.el_i >= exp.length) {
@@ -257,7 +257,7 @@ export function step(state, state_stack) {
 					// console.log("continue_iterations", state.el_i, state.iterator);
 				} else {
 
-					if (state.select_expression < 0) {
+					if (state.select_expression_i < 0) {
 						state.exp_i++;
 						if (state.exp_i >= expressions.length) {
 							state.exp_i = 0;

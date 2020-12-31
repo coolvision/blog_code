@@ -21,7 +21,7 @@ export function new_state(program_id) {
 		args: {n: 0},
 		program_id: program_id,
 		finished: false,
-		select_expression: -1,
+		select_expression_i: -1,
 		fn_element: false,
 		finished_expression: false,
 		triggered_breakpoint: false,
@@ -244,6 +244,7 @@ export function parse(code, program_id) {
 	for (let i in expressions) {
 		expressions[i].exp_i = i;
 		expressions[i].state = new_state(program_id);
+		expressions[i].select_expression_i = i;
 		expressions[i].state_stack = [];
 		for (let j in expressions[i].el) {
 			let el = expressions[i].el[j];
@@ -304,7 +305,7 @@ function render_expressions(exp, exp_i, fn = false) {
 	if (fn) {
 		render += '<div class="flex flex-wrap items-start">'
 	} else {
-		render += '<div class="flex flex-wrap items-center"><div class="step_exp f7 button mr2 ba dib pointer hover-blue" style="user-select: none;" id="' + exp_i + '">step</div><div class="step_over_exp f7 button ba dib pointer hover-blue" style="user-select: none;" id="' + exp_i + '">step_over</div>'
+		render += '<div class="flex flex-wrap items-center"><div class="step_exp f7 button mr2 ba dib pointer hover-blue" style="user-select: none;" id="step_' + exp_i + '">step</div><div class="step_over_exp f7 button ba dib pointer hover-blue" style="user-select: none;" id="step_over_' + exp_i + '">step_over</div>'
 	}
 
 	for (let el = 0; el < exp.length; el++) {
