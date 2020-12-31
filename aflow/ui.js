@@ -223,9 +223,6 @@ for (let p in program_containers) {
 	}, 500));
 }
 
-
-
-
 function add_el_events(program_id) {
 
 	console.log("add_el_events", expressions)
@@ -243,22 +240,23 @@ function add_el_events(program_id) {
 				update_breakpoints();
 			});
 		}
-		// $('#' + program_id + ' #step_' + expressions[i].exp_i).click(function() {
-		//
-		// 	clear_highlight();
-		// 	step(expressions[i].state, expressions[i].state_stack);
-		// 	highlight(expressions[i].state);
-		//
-		// 	console.log("step button");
-		// });
-		// $('#' + program_id + ' #step_over_' + expressions[i].exp_i).click(function() {
-		//
-		// 	clear_highlight();
-		// 	do_step_over(expressions[i].state, expressions[i].state_stack, "over");
-		// 	highlight(expressions[i].state);
-		//
-		// 	console.log("step over button");
-		// });
+		$('#' + program_id + ' #step_' + expressions[i].exp_i).click(function() {
+
+			console.log("step button", JSON.stringify(expressions[i].state));
+
+			clear_highlight();
+			step(expressions[i].state, expressions[i].state_stack);
+			highlight(expressions[i].state);
+
+		});
+		$('#' + program_id + ' #step_over_' + expressions[i].exp_i).click(function() {
+
+			clear_highlight();
+			do_step_over(expressions[i].state, expressions[i].state_stack, "over");
+			highlight(expressions[i].state);
+
+			console.log("step over button");
+		});
 	}
 	for (let i in functions) {
 		for (let j in functions[i].body) {
