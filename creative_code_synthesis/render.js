@@ -139,7 +139,7 @@ function render(renderer, javascript, camera_javascript = "") {
 	return rendered;
 }
 
-var ctrl_renderer = new THREE.WebGLRenderer({antialias: true});
+var ctrl_renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
 var ctrl_camera = new THREE.PerspectiveCamera(camera_fov, camera_aspect,
 		camera_near, camera_far);
 var ctrl_scene = new THREE.Scene();

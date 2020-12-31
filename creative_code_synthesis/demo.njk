@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% include 'head.njk' %}
+		<link rel="stylesheet" href="/creative_code_synthesis/starter.css">
+
+		<script src="/lib/lodash.js" ></script>
+		<script src="/lib/jquery-3.3.1.min.js"></script>
+		<script src="/lib/stringify.js"></script>
+
+		<script src="/creative_code_synthesis/three.min.js" ></script>
+		<script src="/creative_code_synthesis/TrackballControls.js"></script>
+
+		<script src="/program_generation/generate_target.js"></script>
+		<script src="/program_generation/process_template.js"></script>
+		<script src="/program_generation/add_variables.js"></script>
+		<script src="/program_generation/next_program_cached.js"></script>
+
+		<script src="/creative_code_synthesis/utils.js"></script>
+		<script src="/creative_code_synthesis/main.js"></script>
+		<script src="/creative_code_synthesis/render.js"></script>
+		<script src="/creative_code_synthesis/add_canvas.js"></script>
+		<script src="/creative_code_synthesis/load.js"></script>
+		<script src="/creative_code_synthesis/save.js"></script>
+	</head>
+
+	<body class="w-100 sans-serif">
+
+		{% include 'header.njk' %}
+
+		<div id="demo1" class="bb">
+
+			<div class="grid3 f6">
+
+				<div class="pa3-ns pa2 w-100" id="two">
+
+					<div id="ui_panel" class="cl fl f3 w-100">
+						<div id="generate" class="f3-ns f4 mb2 mr1 fw4 ba ph2 pv2-ns pv1 db fl pointer hover-blue">Generate</div>
+						<div id="stop" class="f3-ns f4 mb2 mr1 fw4 ba ph2 pv2-ns pv1 db fl pointer hover-blue">Stop</div>
+						<div class="ml2 fl db">
+							<dd class="f6 ml0">Program №</dd>
+							<dd class="f4 ml0" id="iter_progress">1024</dd>
+						</div>
+
+						<div id="code_panel" class="fl cl w-100 mb2">
+							<div id="json_button" class="bl br bt fw4 f5 ph1 pv1 dib cl fl pointer b--gray">JSON</div>
+							<div id="js_button" class="br bt fw4 f5 ph1 pv1 dib fl pointer b--gray">JavaScript</div>
+							<div id="dsl_button" class="br bt fw4 f5 ph1 pv1 dib fl pointer b--gray">DSL</div>
+
+							<div id="scroll_off_button" class="br bt fw4 f5 ph2 pv1 dib fr pointer b--gray">off</div>
+							<div id="scroll_on_button" class="bl br bt fw4 f5 ph2 pv1 dib fr pointer b--gray">on</div>
+							<div class="ml2 fw4 f5 ph2 pv1 dib pointer b--gray fr bg-light-gray">scroll</div>
+
+							<div id="update_dsl_button" class="bl br bt ml2 fw4 f5 ph2 pv1 dib pointer b--gray fl">update DSL</div>
+
+							<div class="bt cl fl w-100">
+								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="test_code"></div>
+								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="js_code"></div>
+								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="dsl_code"></div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="cl fl">
+						<div id="delete_non_starred" class="mb2 mr1 fw4 ba ph2 pv1 dib fl pointer hover-blue">Delete unsaved</div>
+						<div id="delete_non_starred_undo" class="mb2 mr1 fw4 ba ph2 pv1 dib fl pointer hover-blue">Undo delete (until page reload)</div>
+					</div>
+
+					<div id="images_container" class="images_container cl fl">
+			 			<div class="canvas_img_ui fl" id="canvas_img">
+							<div class="canvas_overlay fl">
+								<canvas to_delete="false" index="0" id="" class="canvas_ui ba b--gray fl"></canvas>
+							</div>
+							<div id="star" class="star_button fl mt1 fw4 f6 pv1 pointer hover-blue">★ save</div>
+							<div class="f6 fl pt1 pl1">n:</div><div class="objects_n f6 fl pt1"></div>
+							<!-- <img id="" class="img_objects_count ba b--gray cl fl" style="display: block;"></img> -->
+						</div>
+					</div>
+				</div>
+
+				<div class="pv3-ns pa2 pt0" id="three">
+					<div class="fw4 f5 ph2 pv1 dib pointer b--gray fl bg-light-gray">camera control</div>
+					<div id="camera_control_on_button" class="bl br bt fw4 f5 ph3 pv1 dib pointer b--gray fl">on</div>
+					<div id="camera_control_off_button" class="br bt fw4 f5 ph3 pv1 dib pointer b--gray fl">off</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="/creative_code_synthesis/ui.js"></script>
+		<script>animate(); load_programs();</script>
+
+		{% include 'footer.njk' %}
+
+	</body>
+</html>

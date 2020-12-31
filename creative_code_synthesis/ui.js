@@ -2,11 +2,30 @@
 $("#three").append(ctrl_renderer.domElement);
 // $("#three").prepend(ctrl_renderer.domElement);
 $("#three canvas").attr("id", "ctrl_canvas");
+$("#three canvas").attr("style", "ctrl_canvas");
 // $("#three canvas").addClass("ba b--gray");
 $("#three canvas").addClass("cl fl b--gray ba");
 controls = new THREE.TrackballControls(ctrl_camera, ctrl_renderer.domElement);
 controls.minDistance = 0.1;
 controls.maxDistance = 1000;
+
+let w = window.innerWidth / parseFloat(
+  getComputedStyle(
+    document.querySelector('body')
+  )['font-size']
+)
+
+$("#highres_render_button").click(function() {
+	ctrl_renderer.setSize(2000, 2000);
+	$("#ctrl_canvas").attr("style", "width: 500px; height: 500px;");
+});
+
+if (w > 48) {
+	ctrl_renderer.setSize(500, 500);
+	$("#camera_control_on_button").click();
+} else {
+	$("#camera_control_off_button").click();
+}
 
 var stop_controls = false;
 var resizing = false;
@@ -68,6 +87,16 @@ $("#dsl_button").click(function() {
 	// $("#camera_js_code").show();
 });
 
+$("#save_image_button").click(function() {
+    var canvas = document.getElementById("ctrl_canvas");
+    var url = canvas.toDataURL();
+    var link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('target', '_blank');
+    link.setAttribute('download', 'image.png');
+    link.click();
+});
+
 $("#js_button").click();
 
 $("#scroll_on_button").click(function() {
@@ -96,19 +125,6 @@ $("#camera_control_off_button").click(function() {
 	// stop_controls = true;
 	controls.enabled = false;
 });
-
-let w = window.innerWidth / parseFloat(
-  getComputedStyle(
-    document.querySelector('body')
-  )['font-size']
-)
-
-if (w > 48) {
-	ctrl_renderer.setSize(500, 500);
-	$("#camera_control_on_button").click();
-} else {
-	$("#camera_control_off_button").click();
-}
 
 $("#paste").click(function() {
 	let program = addProgram();
