@@ -124,13 +124,14 @@ programs["demo6"] =
 `
 
 20 → [size] -> log(size)
-{t: 'i', l: 'j', d: 'k', r: 'l', shoot: 'n', x: size-1, y: size-1, g: 'left', color: 'green'} → push -> [players]
+{t: 'i', l: 'j', d: 'k', r: 'l', shoot: 'n', x: size-1, y: 0, g: 'right', color: 'green'} → push -> [players]
+{t: 'w', l: 'a', d: 's', r: 'd', shoot: 'c', x: 0, y: size-2, g: 'down', color: 'red'} → push -> [players]
 log(players)
 {x: 0, y: 0, direction: 'right'} -> push -> [shot]
 
 repeat(10hz) -> for p in players -> update_player() -> push -> [shot] -> draw()
 
-repeat(10hz) -> for s in shot -> move_projectile(s) -> log(shot)
+repeat(10hz) -> for s in shot -> move_projectile(s)
 
 function update_player() {
   key === p.d
@@ -168,13 +169,55 @@ function draw() {
 	let v = 300/20;
 
 	for (let p of players) {
-		canvas_ctx.fillStyle = p.color;
-		canvas_ctx.fillRect(p.y*v, p.x*v, 15, 15);
+
+		// canvas_ctx.fillRect(p.y*v, p.x*v, 15, 15);
+
+		if (p.g == 'left') {
+			canvas_ctx.beginPath();
+			canvas_ctx.moveTo(p.y*v-10, p.x*v);
+			canvas_ctx.lineTo(p.y*v+5, p.x*v-5);
+			canvas_ctx.lineTo(p.y*v+5, p.x*v+5);
+			canvas_ctx.closePath();
+			canvas_ctx.fillStyle = p.color;
+			canvas_ctx.fill();
+		} else if (p.g == 'right') {
+			canvas_ctx.beginPath();
+			canvas_ctx.moveTo(p.y*v+10, p.x*v);
+			canvas_ctx.lineTo(p.y*v-5, p.x*v-5);
+			canvas_ctx.lineTo(p.y*v-5, p.x*v+5);
+			canvas_ctx.closePath();
+			canvas_ctx.fillStyle = p.color;
+			canvas_ctx.fill();
+		} else if (p.g == 'up') {
+			canvas_ctx.beginPath();
+			canvas_ctx.moveTo(p.y*v, p.x*v-10);
+			canvas_ctx.lineTo(p.y*v-5, p.x*v+5);
+			canvas_ctx.lineTo(p.y*v+5, p.x*v+5);
+			canvas_ctx.closePath();
+			canvas_ctx.fillStyle = p.color;
+			canvas_ctx.fill();
+		} else if (p.g == 'down') {
+			canvas_ctx.beginPath();
+			canvas_ctx.moveTo(p.y*v, p.x*v+10);
+			canvas_ctx.lineTo(p.y*v-5, p.x*v-5);
+			canvas_ctx.lineTo(p.y*v+5, p.x*v-5);
+			canvas_ctx.closePath();
+			canvas_ctx.fillStyle = p.color;
+			canvas_ctx.fill();
+		}
+
+
+
+
 	}
 	canvas_ctx.fillStyle = 'black';
 	for (let s of shot) {
 		canvas_ctx.fillRect(s.y*v, s.x*v, 5, 5);
 	}
+
+
+
+
 }`;
 
 let program_containers = $('.program_demo');
