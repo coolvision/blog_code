@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% include 'head.njk' %}
+	<body class="w-100 sans-serif">
+		{% include 'header.njk' %}
+
+		<script src="/lib/lodash.js" ></script>
+		<script src="/lib/jquery-3.3.1.min.js"></script>
+		<script src="/lib/stringify.js"></script>
+
+		<script src="/program_generation/generate_target.js"></script>
+		<script src="/program_generation/process_template.js"></script>
+		<script src="/program_generation/add_variables.js"></script>
+		<script src="/program_generation/next_program_cached.js"></script>
+
+		<script src="../dsl_reversal.js"></script>
+		<script src="../dsl_sum.js"></script>
+		<script src="../dsl_max.js"></script>
+		<script src="../main.js"></script>
+
+		<!-- {% include './demo1.html' %} -->
+
+		<main>
+
+			<div class="ph4-ns ph3 f5-ns content lh-copy">
+
+				{% include './demo2.html' %}
+				{% include './demo3.html' %}
+				{% include './demo4.html' %}
+				{% include './demo5.html' %}
+
+			</div>
+		</main>
+
+		<script src="../ui.js"></script>
+	</body>
+</html>

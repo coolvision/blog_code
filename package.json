@@ -1,0 +1,25 @@
+{
+  "name": "blog_projects",
+  "version": "1.0.0",
+  "description": "personal website",
+  "main": ".eleventy.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coolvision/blog_projects.git"
+  },
+  "author": "Sergii Kharagorgiiev",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/coolvision/blog_projects/issues"
+  },
+  "homepage": "https://github.com/coolvision/blog_projects#readme",
+  "dependencies": {
+    "markdown-it": "^12.0.3"
+  }
+}

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% include 'head.njk' %}
+
+		<script src="../lib/lodash.js" ></script>
+		<script src="../lib/jquery-3.3.1.min.js"></script>
+		<script src="../lib/stringify.js"></script>
+
+		<script src="../program_generation/generate_target.js"></script>
+		<script src="../program_generation/process_template.js"></script>
+		<script src="../program_generation/add_variables.js"></script>
+		<script src="../program_generation/next_program_cached.js"></script>
+
+		<script src="./dsl_reversal.js"></script>
+		<script src="./dsl_sum.js"></script>
+		<script src="./dsl_max.js"></script>
+		<script src="./main.js"></script>
+	</head>
+	<body class="w-100 sans-serif">
+		{% include 'header.njk' %}
+
+		{% include './demo1.html' %}
+
+		<main>
+
+		<p style="max-width: none;" class="mh0 ph4-ns ph3 f4-ns f5 flex items-center">05/2020&nbsp;&nbsp;<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+		<h1 class="near-black ph4-ns ph3 fw5 f-headline-ns f1-m f2">Inductive program synthesis in Javascript</h1>
+		<div class="ph4-ns ph3 f4-ns content lh-copy">
+
+
+{% markdown %}
+
+Any compiler or transpiler is doing some form of program synthesis. But “proper” program synthesis usually means generation of high level programs from scratch, given only high level problem descriptions.
+
+This post is about one of the most simple and straightforward methods of automatic program synthesis: inductive synthesis based on **input-output examples** specification and **brute-force enumerative** search.
+
+### Synthesis task specification
+
+Let's start with a simple example. Suppose that we want to automatically generate a program that reverses an array.
+
+How to formulate this task for the automatic program generator? One option is to just describe it in natural language. But it would be quite hard to automatically parse and understand. A simpler way is to provide examples of inputs and expected outputs:
+
+[1, 2, 3, 4, 5, 6] → [6, 5, 4, 3, 2, 1]
+
+[5, 2, 7, 6] → [6, 7, 2, 5]
+
+It's similar to a programmer working on a task using test-driven development, with a set of self-explanatory tescases.
+
+### Brute-force search
+
+How to find a program that satisfies some input-output examples? There are several possible search strategies, but the simplest one is just with a brute force enumeration.
+
+The idea is to generate all programs (within some size liimts and a limited language subset), and pick the first one that works correctly for all specified examples.
+
+This is probably the least efficient approach of all, but with some additional optimizations and heuristics for reducing the search space it can actually be practical.
+
+For example, an algorithm that won last year's synthesis competition [SyGuS-Comp 2019](https://sygus.org/comp/2019/) in programming-by-examples track, is based on brute-force enumerative search strategy. As well as some previous years winners (<a href="#examples" id="ref1">EUSOLVER, Enumerative CEGIS Solver</a>). There are even some practical applications, for example brute-force search can be used for [synthesising distributed systems protocols](http://dl.acm.org/citation.cfm?id=2462174).
+
+### Generating Javascript
+
+For generating and manipulating programs, code has to be represented as a data structure. This is not a problem in homoiconic languages like Lisp, but in Javascript it’s harder.
+
+One simple idea (used, for example in miniMAL project [https://github.com/kanaka/miniMAL](https://github.com/kanaka/miniMAL)), is to use JSON for representing programs. In this case, JSON arrays are serving as an analog of Lisp s-expressions.
+
+Similar to an s-expression, each JavaScript expression is represented as a JSON array. First element is a function name, and the rest of elements are for function arguments.
+
+For example:
+
+<table class="f5-ns f6-m f7 w-100">
+  <thead>
+  <tr>
+   <td><strong>Javascript</strong></td>
+   <td><strong>JSON</strong></td>
+  </tr>
+  </thead>
+  <tr>
+   <td>Math.pow(x, 2)</td>
+   <td>["Math.pow", "x", 2]</td>
+  </tr>
+  <tr>
+   <td>Math.pow(Math.sin(x), 2)</td>
+   <td>[“Math.pow”, [“Math.sin”,  “x”], 2]</td>
+  </tr>
+</table>
+
+For operators, can use prefix notation:
+
+<table class="f5-ns f6-m f7 w-100">
+  <tr>
+   <td>x = 2 + 2</td>
+   <td>["=", x, ["+", 2, 2]]</td>
+  </tr>
+</table>
+
+There are some special expressions formats: control flow, variables declaration.
+
+<table class="f5-ns f6-m f7 w-100">
+  <tr>
+   <td><strong>Javascript</strong>
+   </td>
+   <td><strong>JSON</strong>
+   </td>
+  </tr>
+  <tr>
+   <td>let x = 1
+   </td>
+   <td> ["let", "x", 1]
+   </td>
+  </tr>
+  <tr>
+   <td>for (let i = 0; i &lt; 10; i += 1) { console.log(i) }
+   </td>
+   <td>["for”, ”i”, ”0”, ”10”, ”1”,["block", [“console.log”, “i”]]]
+   </td>
+  </tr>
+  <tr>
+   <td>if (i > 1) { i = 1; }
+   </td>
+   <td>["if", [“>“, “i”, 1], ["block", [“=“, “i”, 1]]]
+   </td>
+  </tr>
+</table>
+
+Also need syntax conventions for calling methods, accessing properties, and indexing arrays:
+
+<table class="f5-ns f6-m f7 w-100">
+  <tr>
+   <td>let a = new Array(0, 1, 2)
+   </td>
+   <td>["let", "a", ["new Array", 0, 1, 2]]
+   </td>
+  </tr>
+  <tr>
+   <td>a.shift()
+   </td>
+   <td>[".shift", "a"]
+   </td>
+  </tr>
+  <tr>
+   <td>let n1 = a.length
+   </td>
+   <td>["let",  "n1", [".length_", "a"]]
+   </td>
+  </tr>
+  <tr>
+   <td>let n2 = a[1]
+   </td>
+   <td>["let",  "n2", ["get_index", a, 1]
+   </td>
+  </tr>
+  <tr>
+   <td>a[1] = 2
+   </td>
+   <td>["set_index", a, 0, 0]
+   </td>
+  </tr>
+</table>
+
+This allows to represent a wide range of possible JavaScript expressions, and covers all language features needed for a simple demo.
+
+Code for transforming from JSON representation to Javascript is fairly simple. It just has to traverse arrays, print out expressions elements in correct order, and deal with code formatting.
+
+### Simple DSL
+
+For brute-force search to be feasible, search space has to be limited to some restricted domain-specific language subset, which depends on the kind of the target problem.
+
+For example, can design a simple DSL targeted for simple array processing. It should have functions for array access and manipulation, simple arithmetics, and control flow functions.
+
+<table class="f5-ns f6-m f7 w-100">
+  <tr>
+   <td><strong>function</strong>
+   </td>
+   <td><strong>Javascript</strong>
+   </td>
+   <td><strong>JSON</strong>
+   </td>
+  </tr>
+  <tr>
+   <td>subtract
+   </td>
+   <td>number = number?? - number??
+   </td>
+   <td>["-", "number??", "number??", "number"]
+   </td>
+  </tr>
+  <tr>
+   <td>add
+   </td>
+   <td>number = number?? + number??
+   </td>
+   <td>["+", "number??", "number??", "number"]
+   </td>
+  </tr>
+  <tr>
+   <td>greater than
+   </td>
+   <td>boolean = number?? > number??
+   </td>
+   <td>[">", "number??", "number??", "boolean"]
+   </td>
+  </tr>
+  <tr>
+   <td>less than
+   </td>
+   <td>boolean = number?? &lt; number??
+   </td>
+   <td>["&lt;", "number??", "number??", "boolean"]
+   </td>
+  </tr>
+  <tr>
+   <td>equal
+   </td>
+   <td>boolean = number?? == number??
+   </td>
+   <td>["==", "number??", "number??", "boolean"]
+   </td>
+  </tr>
+  <tr>
+   <td>array length
+   </td>
+   <td>number = array??.length
+   </td>
+   <td>[".length_", "array??", "number"]
+   </td>
+  </tr>
+  <tr>
+   <td>get array element at index
+   </td>
+   <td>number = array??[number??]
+   </td>
+   <td>["get_index", "array??", "number??", "number"]
+   </td>
+  </tr>
+  <tr>
+   <td>set array element at index
+   </td>
+   <td>array??[number??] = number
+   </td>
+   <td>["set_index", "output", "number??", "number??", ""]
+   </td>
+  </tr>
+  <tr>
+   <td>for loop
+   </td>
+   <td>for (let i in array??) { ?? }
+   </td>
+   <td>["for", "i", ["block", "??"], "in", "array??", ""]
+   </td>
+  </tr>
+  <tr>
+   <td>If condition
+   </td>
+   <td>if (boolean??) { ?? }
+   </td>
+   <td>["if", "boolean??", ["block", "??"], ""],
+   </td>
+  </tr>
+</table>
+
+In the DSL description, "??" stands for an undefined value, that can be replaced with an expression or a variable. This notation is taken from <a href="#sketch" id="ref2">SKETCH language</a>, where "??" represents a *hole,* a placeholder that the synthesizer can replace with an integer constant.
+
+Some undefined values have annotated types. For example "number??" means that the argument should be replaced with an expression that has "number" return value. This allows for additional limitations on the search space.
+
+### Algorithm for program generation
+
+How to generate all programs that can be represented with the DSL? The algorithm is fairly simple: start with some undefined values, and iteratively replace them with all possible options picked from the list of DSL expressions. Selected and pasted expressions would contain some undefined values of their own, so the process is repeated until all the options are used, or until expressions tree depth reaches some limit.
+
+It’s like iterative template rewriting, and it’s easier to demonstrate with an example:
+
+<table class="f5-ns f6-m f7 w-100">
+<tr>
+	<td>1. Start with an empty/undefined program </td>
+	<td>["??", "??", "??", "??"] </td>
+</tr>
+<tr>
+	<td>2. Traverse the expressions tree, and pick the first occurring undefined value </td>
+	<td>[<span class="red">"??"</span>, "??", "??", "??"] </td>
+</tr>
+<tr>
+	<td>3. List all options for replacing this value (expressions that have an empty return type) </td>
+	<td><span class="red">["set_index", "output", "number??", "number??", ""]</span><br>
+		["if", "boolean??", ["block", "??"], ""]<br>
+		["if", "boolean??", ["block", "??"], ""]
+	</td>
+</tr>
+<tr>
+	<td>4. Repace undefined value with the first option </td>
+	<td>[<span class="red">["set_index", "output", "number??", "number??", ""]</span>, "??", "??" ,"??"] </td>
+</tr>
+</table>
+
+Steps 2-4 are repeated iteratively. Expressions tree is traversed depth-first, and each found leaf corresponds to a unique program. Press “next” button in the demo below, to see next iterations.
+
+{% endmarkdown %}
+{% include './demo2.html' %}
+{% markdown %}
+
+Generated programs are verified with the given input-output examples:
+
+1. Translate from JSON represenation to Javascript
+2. Fill pre-defined input array variable with an example
+3. Evaluate the program with eval()
+4. Check if contents of the pre-defined output variable correspond to the output example.
+
+The demo below shows program generation for "array reversal" problem. Press “generate” button to see continuous generation, or use “next” to see generation steps. It generates and checks around a million of short programs per minute, and is able so solve the problem in ~10-20s. I tweaked the DSL to have a bare minimum of available expressions, for search to be faster. Size of the program is also limited by number of used varialbes (limited to 4). It would still work with larger more generic DSL, just would take more time.
+
+{% endmarkdown %}
+{% include './demo5.html' %}
+{% markdown %}
+
+Some more examples are show below. They also have custom DSLs tuned for each problem, so that it does not take too much time (~10-20s).
+
+{% endmarkdown %}
+{% include './demo3.html' %}
+{% markdown %}
+
+{% endmarkdown %}
+{% include './demo4.html' %}
+{% markdown %}
+
+## Refenences & links
+
+(book) [Program Synthesis](https://rishabhmit.bitbucket.io/papers/program_synthesis_now.pdf)
+Sumit Gulwani, Oleksandr Polozov, Rishabh Singh
+
+(course materials) Introduction to Program Synthesis
+[http://people.csail.mit.edu/asolar/SynthesisCourse/Lecture2.htm](http://people.csail.mit.edu/asolar/SynthesisCourse/Lecture2.htm)
+
+### Papers
+
+[Dimensions in Program Synthesis](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.367.9604&rep=rep1&type=pdf)
+Sumit Gulwani
+
+[Inductive Programming (A Survey of Program Synthesis Techniques)](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=7EC748B93DCDCE0DABC810450BD07AE1?doi=10.1.1.180.1237&rep=rep1&type=pdf)
+Emanuel Kitzelmann
+
+<span id="examples"><a href="#ref1">↑</a></span>
+Scaling Enumerative Program Synthesis via Divide and Conquer
+Rajeev Alur, Arjun Radhakrishna, and Abhishek Udupa
+
+CVC4SY for SyGuS-COMP 2019
+Andrew Reynolds, Haniel Barbosa, Andres Nötzli, Clark Barrett, Cesare Tinelli
+
+<span id="sketch"><a href="#ref2">↑</a></span>
+The Sketching Approach to Program Synthesis
+Armando Solar-Lezama
+
+### Blog posts
+
+[Software that writes software: on program synthesis](https://thegradient.pub/p/577a122d-df49-4e1f-8dc3-324f5c784236/)
+Adithya Ganesh
+
+[A Program Synthesis Primer ](https://barghouthi.github.io/2017/04/24/synthesis-primer/)
+Aws Albarghouthi
+
+[Program Synthesis in 2017-18](https://alexpolozov.com/blog/program-synthesis-2018/)
+Alex Polozov
+
+[Program Synthesis is Possible](https://www.cs.cornell.edu/~asampson/blog/minisynth.html)
+Adrian Sampson
+
+[Homoiconicity, Lisp, and Program Synthesis](https://blog.sigplan.org/2020/03/25/homoiconicity-lisp-and-program-synthesis/)
+Rajesh Jayaprakash
+
+[Program Synthesis in 2019](https://blog.sigplan.org/2019/07/31/program-synthesis-in-2019/)
+[Program Synthesis Explained](https://www.cs.utexas.edu/~bornholt/post/synthesis-explained.html)
+[Building a Program Synthesizer](https://www.cs.utexas.edu/~bornholt/post/building-synthesizer.html)
+[Building Your First Program Synthesizer](https://blog.sigplan.org/2019/11/26/building-your-first-program-synthesizer/)
+James Bornholt
+
+{% endmarkdown %}
+
+			</div>
+		</main>
+
+		<script src="./ui.js"></script>
+		<!-- <script src="../lib/likely.js" type="text/javascript"></script -->
+
+		{% include 'footer.njk' %}
+
+	</body>
+</html>
