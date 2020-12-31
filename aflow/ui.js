@@ -243,22 +243,22 @@ function add_el_events(program_id) {
 				update_breakpoints();
 			});
 		}
-		$('#' + program_id + ' #step_' + expressions[i].exp_i).click(function() {
-
-			clear_highlight();
-			step(expressions[i].state, expressions[i].state_stack);
-			highlight(expressions[i].state);
-
-			console.log("step button");
-		});
-		$('#' + program_id + ' #step_over_' + expressions[i].exp_i).click(function() {
-
-			clear_highlight();
-			do_step_over(expressions[i].state, expressions[i].state_stack, "over");
-			highlight(expressions[i].state);
-
-			console.log("step over button");
-		});
+		// $('#' + program_id + ' #step_' + expressions[i].exp_i).click(function() {
+		//
+		// 	clear_highlight();
+		// 	step(expressions[i].state, expressions[i].state_stack);
+		// 	highlight(expressions[i].state);
+		//
+		// 	console.log("step button");
+		// });
+		// $('#' + program_id + ' #step_over_' + expressions[i].exp_i).click(function() {
+		//
+		// 	clear_highlight();
+		// 	do_step_over(expressions[i].state, expressions[i].state_stack, "over");
+		// 	highlight(expressions[i].state);
+		//
+		// 	console.log("step over button");
+		// });
 	}
 	for (let i in functions) {
 		for (let j in functions[i].body) {
@@ -343,7 +343,7 @@ function do_step(program_id, type = "") {
 		// step all
 		for (let i in expressions) {
 			console.log("expression", i, type, JSON.stringify(expressions[i].state));
-			expressions[i].state.select_expression = i;
+			expressions[i].state.select_expression_i = i;
 			if (expressions[i].hasOwnProperty("interval")) {
 				if ((type == "") || (type == "over" && !expressions[i].state.fn_element) ||
 					(type == "out" && !expressions[i].state.fn)) {
@@ -448,7 +448,7 @@ $(".run").click(function() {
 	update_breakpoints();
 
 	for (let i in expressions) {
-		expressions[i].state.select_expression = i;
+		expressions[i].state.select_expression_i = i;
 		if (expressions[i].hasOwnProperty("interval")) {
 			if (!expressions[i].running) {
 				expressions[i].running = true;

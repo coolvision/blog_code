@@ -244,7 +244,7 @@ export function parse(code, program_id) {
 	for (let i in expressions) {
 		expressions[i].exp_i = i;
 		expressions[i].state = new_state(program_id);
-		expressions[i].select_expression_i = i;
+		// expressions[i].select_expression_i = i;
 		expressions[i].state_stack = [];
 		for (let j in expressions[i].el) {
 			let el = expressions[i].el[j];
