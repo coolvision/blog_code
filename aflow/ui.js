@@ -242,6 +242,7 @@ function add_el_events(program_id) {
 		}
 		$('#' + program_id + ' #step_' + expressions[i].exp_i).click(function() {
 
+			select_program(program_id);
 			console.log("step button", JSON.stringify(expressions[i].state));
 
 			clear_highlight();
@@ -250,6 +251,8 @@ function add_el_events(program_id) {
 
 		});
 		$('#' + program_id + ' #step_over_' + expressions[i].exp_i).click(function() {
+
+			select_program(program_id);
 
 			clear_highlight();
 			do_step_over(expressions[i].state, expressions[i].state_stack, "over");
@@ -469,11 +472,11 @@ $(".run").click(function() {
 });
 
 $(".restart").click(function() {
-	stop_running();
 	paused = false;
 	was_paused = false;
 	was_running = false;
 	select_program($(this).parent().attr("id"));
+	stop_running();
 	reset_runtime();
 	stepping_state_stack = [];
 	stepping_state = new_state(_program_id);
