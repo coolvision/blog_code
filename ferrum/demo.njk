@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% include 'head.njk' %}
+	<body class="w-100 sans-serif">
+		{% include 'header.njk' %}
+		<main>
+			<div class="ph4-ns ph3 grid2 f6 mt3 cl fl">
+
+				<div id="code" class="code-font f5 lh-copy io pa3 bg-near-white br2 editable_code"
+				contentEditable="plaintext-only"></div>
+
+				<div id="parse_results" class="code-font f5 lh-copy io pa3 bg-near-white br2 editable_code"
+				contentEditable="plaintext-only"></div>
+
+			</div>
+	</main>
+
+	<script src="/actor_based/moo.js"></script>
+	<script src="/actor_based/grammar.js"></script>
+	<script src="/actor_based/nearley.js"></script>
+
+	<script src="/actor_based/demo_code.js"></script>
+	<script type="module" src="/actor_based/step.js"></script>
+	<script type="module" src="/actor_based/parse.js"></script>
+
+   </body>
+</html>

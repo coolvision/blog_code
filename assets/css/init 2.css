@@ -1,0 +1,127 @@
+* {
+	box-sizing: border-box;
+	text-decoration: none;
+}
+
+p > a {
+  word-break: break-word;
+}
+
+a {
+  word-break: break-word;
+}
+
+table {
+	table-layout: fixed;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+td {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+.cell {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+.logo {
+	font-family: vtf_hngl;
+	font-size: 80px;
+	position: absolute;
+	z-index: -10;
+	color: rgb(240, 240, 240);
+	line-height: 1;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+nav {
+	font-family: soehne,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
+}
+
+h1 {
+	line-height: 1;
+	z-index: 10;
+	position: relative;
+	font-family: Lausanne-300,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
+	font-weight: 300;
+}
+
+.lausanne {
+	font-family: Lausanne-300,-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
+	font-weight: 300;
+}
+
+pre {
+	font-size: 0.9rem;
+	background-color: #EEEEEE;
+	padding: 8px;
+	overflow-x: scroll;
+}
+
+@media screen and (min-width: 700px) {
+	p {
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	h2 {
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	h3 {
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	h4 {
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	ol {
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.content_center {
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.content_full {
+		max-width: none;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	ul {
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	pre {
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+		overflow-x: auto;
+	}
+}
+
+.code-font {
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}

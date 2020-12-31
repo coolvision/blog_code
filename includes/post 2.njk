@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% include 'head.njk' %}
+	</head>
+	<body class="w-100 sans-serif">
+
+		{% include 'header.njk' %}
+
+		<main>
+			<p style="max-width: none;" class="mh0 ph4-ns ph3 f4 flex items-center">{{ time }}&nbsp;&nbsp;<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+			<h1 class="near-black ph4-ns ph3 f-subheadline-l f1-m f2">{{ title }}</h1>
+
+			<div class="ph4-ns ph3 f4-ns content lh-copy">
+				{{ content | safe }}
+			</div>
+		</main>
+
+		{% include 'footer.njk' %}
+
+   </body>
+</html>

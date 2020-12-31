@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% include 'head.njk' %}
+	</head>
+	<body class="w-100 sans-serif">
+
+		{% include 'header.njk' %}
+
+		<main>
+			<h1 class="near-black ph4-ns ph3 fw5 f-headline-ns f1">Projects</h1>
+			<div class="ph4-ns ph3 f4-ns content lh-copy">
+
+{% markdown %}
+
+### 3d scanner
+https://github.com/coolvision/KinectShape
+https://web.archive.org/web/20141129071120/http://k10v.com/18/
+
+### 2d kinematics simulator
+https://github.com/coolvision/simple_cad
+
+## Bongard problems solver
+https://k10v.github.io/2018/02/25/Solving-Bongard-problems-with-deep-learning/
+https://notes.fringeling.com/BongardSolvers/
+
+## Robot arm gesture control
+https://web.archive.org/web/20150423063921/http://k10v.com/gestures-robot-arm/
+
+## CVAE
+https://github.com/coolvision/vae_conv
+
+## RBM training
+https://github.com/coolvision/rbm_demo
+https://web.archive.org/web/20141113145331/http://k10v.com/rbm-demo/
+
+## Voxel fractals with chaos game algorithm
+https://github.com/coolvision/fractal_demo
+https://web.archive.org/web/20141129032506/http://k10v.com/3d-fractals/
+
+{% endmarkdown %}
+
+			</div>
+		</main>
+
+		{% include 'footer.njk' %}
+
+	</body>
+</html>

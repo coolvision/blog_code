@@ -1,0 +1,11 @@
+
+.log {
+    width: 300px;
+    /* height: 192px; */
+	overflow-y: auto;
+}
+
+.element {
+	white-space:pre-wrap;
+    word-break: break-word;
+}

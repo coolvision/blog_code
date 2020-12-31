@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% include 'head.njk' %}
+		<link rel="stylesheet" href="./starter.css">
+
+		<script src="../lib/lodash.js" ></script>
+		<script src="../lib/jquery-3.3.1.min.js"></script>
+		<script src="../lib/stringify.js"></script>
+
+		<script src="./three.min.js" ></script>
+		<script src="./TrackballControls.js"></script>
+
+		<script src="../program_generation/generate_target.js"></script>
+		<script src="../program_generation/process_template.js"></script>
+		<script src="../program_generation/add_variables.js"></script>
+		<script src="../program_generation/next_program_cached.js"></script>
+
+		<script src="./utils.js"></script>
+		<script src="./main.js"></script>
+		<script src="./render.js"></script>
+		<script src="./add_canvas.js"></script>
+		<script src="./load.js"></script>
+		<script src="./save.js"></script>
+	</head>
+
+	<body class="w-100 sans-serif">
+
+		{% include 'header.njk' %}
+
+		<div id="demo1" class="bb">
+
+			<div class="grid3 f6">
+
+				<div class="pa3-ns pa2 w-100" id="two">
+
+					<div id="ui_panel" class="cl fl f3 w-100">
+						<div id="generate" class="f3-ns f4 mb2 mr1 fw4 ba ph2 pv2-ns pv1 db fl pointer hover-blue">Generate</div>
+						<div id="stop" class="f3-ns f4 mb2 mr1 fw4 ba ph2 pv2-ns pv1 db fl pointer hover-blue">Stop</div>
+						<div class="ml2 fl db">
+							<dd class="f6 ml0">Program №</dd>
+							<dd class="f4 ml0" id="iter_progress">1024</dd>
+						</div>
+
+						<div id="code_panel" class="fl cl w-100 mb2">
+							<div id="json_button" class="bl br bt fw4 f5 ph1 pv1 dib cl fl pointer b--gray">JSON</div>
+							<div id="js_button" class="br bt fw4 f5 ph1 pv1 dib fl pointer b--gray">JavaScript</div>
+							<div id="dsl_button" class="br bt fw4 f5 ph1 pv1 dib fl pointer b--gray">DSL</div>
+
+							<div id="scroll_off_button" class="br bt fw4 f5 ph2 pv1 dib fr pointer b--gray">off</div>
+							<div id="scroll_on_button" class="bl br bt fw4 f5 ph2 pv1 dib fr pointer b--gray">on</div>
+							<div class="ml2 fw4 f5 ph2 pv1 dib pointer b--gray fr bg-light-gray">scroll</div>
+
+
+							<div class="bt cl fl w-100">
+								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="test_code"></div>
+								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="js_code"></div>
+								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="dsl_code"></div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="cl fl">
+						<div id="delete_non_starred" class="mb2 mr1 fw4 ba ph2 pv1 dib fl pointer hover-blue">Delete unsaved</div>
+						<div id="delete_non_starred_undo" class="mb2 mr1 fw4 ba ph2 pv1 dib fl pointer hover-blue">Undo delete (until page reload)</div>
+					</div>
+
+					<div id="images_container" class="images_container cl fl">
+			 			<div class="canvas_img_ui fl" id="canvas_img">
+							<div class="canvas_overlay fl">
+								<canvas to_delete="false" index="0" id="" class="canvas_ui ba b--gray fl"></canvas>
+							</div>
+							<div id="star" class="star_button fl mt1 fw4 f6 pv1 pointer hover-blue">★ save</div>
+							<div class="f6 fl pt1 pl1">n:</div><div class="objects_n f6 fl pt1"></div>
+							<!-- <img id="" class="img_objects_count ba b--gray cl fl" style="display: block;"></img> -->
+						</div>
+					</div>
+				</div>
+
+				<div class="pv3-ns pa2 pt0" id="three">
+					<div class="fw4 f5 ph2 pv1 dib pointer b--gray fl bg-light-gray">camera control</div>
+					<div id="camera_control_on_button" class="bl br bt fw4 f5 ph3 pv1 dib pointer b--gray fl">on</div>
+					<div id="camera_control_off_button" class="br bt fw4 f5 ph3 pv1 dib pointer b--gray fl">off</div>
+				</div>
+			</div>
+		</div>
+
+		<main>
+			<p style="max-width: none;" class="mh0 ph4-ns ph3 f4-ns f5 flex items-center">09/2019&nbsp;&nbsp;<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+			<h1 class="near-black ph4-ns ph3 fw5 f-subheadline-m f-subheadline-l f2">Creative code synthesis</h1>
+
+			<div class="ph4-ns ph3 f4-ns content lh-copy">
+{% markdown %}
+
+Creative coding is a discipline of using programming as an artistic tool. [It has a rich history](https://thegradient.pub/the-past-present-and-future-of-ai-art/), and it's becoming more widespread and accessible, based on many mature frameworks for multimedia applications, and great support for creative applications in modern web browsers. *Algorithmic art* and *generative art* are related terms that roughly mean the same thing.
+
+There are <a href="#examples" id="ref1">many examples</a> of amazing artworks that are generated with algorithms. This project, however, is not about writing image-generating programs. It's about meta-programming, that is, automatic generation of programs that in turn produce creative visuals.
+
+{% endmarkdown %}
+<p class="mvn flex flex-wrap justify-around">
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/download_55.png" />
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/download_63.png" />
+</p>
+{% markdown %}
+
+### Program synthesis
+
+While working on [inductive program synthesis project](/inductive_program_synthesis/), I learned about automatic generation of code that satisfies input-output examples for tasks like "reverse an array".
+
+Similar approach can be used for a more creative application. The idea is to base generated code on a graphics framework (for example Three.js), and to generate instructions randomly. When evaluated, generated programs should create interesting 3d scenes and images.
+
+Of course, majority of randomly generated programs would not even draw anything (after all, programming is not that simple). But it's easy to just apply brute force search, and to continue trying until one of the programs actually renders something.
+
+{% endmarkdown %}
+<p class="mvn flex flex-wrap justify-around">
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/download_52.png" />
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/download_56.png" />
+</p>
+{% markdown %}
+
+### Implementation & demo
+
+For technical details, I can refer to the [post about program synthesis](/inductive_program_synthesis/). In brief, programs are represented as JSON structures, which are populated from a predefined set of statements and functions. Then JSON is converted to Javascript with a simple code generator, and evaluated.
+
+Often, generated images contain just one or two random primitive objects, which is not very interesting, so I'm additionally filtering out programs that render images with less than 10 objects.
+
+The demo on top of this page is simple: press "generate" and wait for few seconds until the next program is generated. There are several pre-loaded images/programs, which can be selected with a click for viewing in the larger viewport. Programs are saved to to browser localStorage. Favourite images can be marked with <span class="red">"★ save"</span> buttons, and boring images can be deleted with "Delete unsaved" button.
+
+{% endmarkdown %}
+<p class="mvn flex flex-wrap justify-around">
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/img_10.png" />
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/download_10.png" />
+</p>
+{% markdown %}
+
+### Automatic creativity?
+
+Most generated images are trivial and boring. However, with a human curator filtering out simple and repetitive images, it does produce interesting results, and the sheer variety of the created images is impressive.
+
+Of course, results are not as good as algorithmic artworks designed by people, but it still might be a good source of inspiration, and some of the images might even deserve to be on posters.
+
+{% endmarkdown %}
+
+<!-- <div class="flex flex-wrap justify-around">
+	<img class="w-20"
+		src="/creative_code_synthesis/3d_images_selected/mediamodifier_image.png" />
+</div> -->
+
+<p class="mvn flex flex-wrap justify-around">
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/download_61.png" />
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/download_62.png" />
+</p>
+{% markdown %}
+
+### Comparison with existing systems
+
+There are several similar systems that apply some form of code/parameter generation to interactive computational creativity. Some notable exampls are: [electricsheep.org](https://electricsheep.org/#/sheep), [tinkersynth.com](tinkersynth.com), and few other can be found at [mlart.co](https://mlart.co/).
+
+But all of the systems that I know of are based on some specialized environments and parametrizations. The main difference of this project is that code generation is done with a general purpose programming language (and a popular one). This way, creative metaprogramming is easier to extend, code is easier to examine, it can be demonstrated in any modern browser, and does not require additional setup.
+
+{% endmarkdown %}
+<p class="mvn flex flex-wrap justify-around">
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/img_23.png" />
+	<img class="example_image"
+		src="/creative_code_synthesis/3d_images_selected/download_42.png" />
+</p>
+{% markdown %}
+
+## Links
+
+A collection of resources that were useful for learning about creative coding and artificial creativity.
+
+### Creative coding & generative art overview
+
+[https://thegradient.pub/the-past-present-and-future-of-ai-art/](https://thegradient.pub/the-past-present-and-future-of-ai-art/)
+
+[https://inconvergent.net/thoughts-on-generative-art/](https://inconvergent.net/thoughts-on-generative-art/)
+
+[http://www.generative-gestaltung.de/2/](http://www.generative-gestaltung.de/2/)
+
+[https://github.com/terkelg/awesome-creative-coding](https://github.com/terkelg/awesome-creative-coding)
+
+[https://www.awwwards.com/creative-code-css-javascript-webgl-and-three-js-experiments.html](https://www.awwwards.com/creative-code-css-javascript-webgl-and-three-js-experiments.html)
+
+[https://www.artnome.com/news/2020/8/24/interview-with-generative-artist-jared-tarbell](https://www.artnome.com/news/2020/8/24/interview-with-generative-artist-jared-tarbell)
+
+[https://livebook.manning.com/book/generative-art/chapter-1/1](https://livebook.manning.com/book/generative-art/chapter-1/1)
+
+[https://www.invaluable.com/blog/generative-art/](https://www.invaluable.com/blog/generative-art/)
+
+<h3 id="examples">Some examples of generative art (random and very limited selection)<a href="#ref1">↑</a></h3>
+
+[http://zenbullets.com/](http://zenbullets.com/)
+
+[https://inconvergent.net/](https://inconvergent.net/)
+
+[http://www.complexification.net/gallery/](http://www.complexification.net/gallery/)
+
+[http://kylemcdonald.net/](http://kylemcdonald.net/)
+
+[https://www.instagram.com/praystation](https://www.instagram.com/praystation)
+
+[http://manoloide.com/](http://manoloide.com/)
+
+[https://scottdraves.com/portfolio.html](https://scottdraves.com/portfolio.html)
+
+[https://www.mattdesl.com/](https://www.mattdesl.com/)
+
+[https://generated.space/](https://generated.space/)
+
+[https://www.creativeapplications.net/tag/creative-code/](https://www.creativeapplications.net/tag/creative-code/)
+
+[https://spite.github.io/looper/](https://spite.github.io/looper/#5)
+
+[https://tinkersynth.com/](https://tinkersynth.com/)
+
+### Creative coding tools & frameworks
+
+[https://www.openprocessing.org/](https://www.openprocessing.org/)
+
+[https://processing.org/](https://processing.org/)
+
+[https://openframeworks.cc/about/](https://openframeworks.cc/about/)
+
+[https://libcinder.org/about](https://libcinder.org/about)
+
+[https://nannou.cc/](https://nannou.cc/)
+
+### Lectures & tutorials
+
+[https://generativeartistry.com/tutorials/](https://generativeartistry.com/tutorials/)
+
+[https://www.skillshare.com/classes/Programming-Graphics-I-Introduction-to-Generative-Art/782118657](https://www.skillshare.com/classes/Programming-Graphics-I-Introduction-to-Generative-Art/782118657)
+
+[https://www.futurelearn.com/courses/creative-coding](https://www.futurelearn.com/courses/creative-coding)
+
+[https://www.coursera.org/learn/digitalmedia](https://www.coursera.org/learn/digitalmedia)
+
+[https://www.kadenze.com/courses/creative-programming-for-audiovisual-art/info](https://www.kadenze.com/courses/creative-programming-for-audiovisual-art/info)
+
+[https://observablehq.com/@makio135/creative-coding](https://observablehq.com/@makio135/creative-coding)
+
+[https://frontendmasters.com/courses/canvas-webgl/](https://frontendmasters.com/courses/canvas-webgl/)
+
+[https://www.creativebloq.com/how-to/get-started-with-webgl-using-threejs](https://www.creativebloq.com/how-to/get-started-with-webgl-using-threejs)
+
+### Artificial creativity
+
+[https://algorithms.design/](https://algorithms.design/)
+
+[https://aeon.co/ideas/there-is-no-such-thing-as-computer-art-it-s-all-just-art](https://aeon.co/ideas/there-is-no-such-thing-as-computer-art-it-s-all-just-art)
+
+[https://components.ai/](https://components.ai/about)
+
+[https://en.wikipedia.org/wiki/Low-complexity_art](https://en.wikipedia.org/wiki/Low-complexity_art)
+
+{% endmarkdown %}
+			</div>
+		</main>
+
+		<script src="./ui.js"></script>
+		<script>animate(); load_programs();</script>
+
+		{% include 'footer.njk' %}
+
+	</body>
+</html>
