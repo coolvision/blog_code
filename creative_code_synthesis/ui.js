@@ -19,6 +19,13 @@ $(window).on('resize', function(e) {
 	}, 250);
 });
 
+$("#dsl_code").text(dsl_config);
+
+$("#update_dsl_button").click(function() {
+	dsl_config = $("#dsl_code").text();
+	console.log("update dsl", dsl_config)
+});
+
 function animate() {
 	requestAnimationFrame(animate);
 	if (!resizing && !stop_controls) {
@@ -37,7 +44,8 @@ $("#json_button").click(function() {
 	$("#test_code").show();
 	$("#json_button").addClass("bg-washed-green");
 	$("#js_button").removeClass("bg-washed-green");
-	$("#camera_js_code").hide();;
+	$("#dsl_button").removeClass("bg-washed-green");
+	// $("#camera_js_code").hide();
 });
 
 $("#js_button").click(function() {
@@ -46,8 +54,20 @@ $("#js_button").click(function() {
 	$("#dsl_code").hide();
 	$("#js_button").addClass("bg-washed-green");
 	$("#json_button").removeClass("bg-washed-green");
-	$("#camera_js_code").show();
+	$("#dsl_button").removeClass("bg-washed-green");
+	// $("#camera_js_code").show();
 });
+
+$("#dsl_button").click(function() {
+	$("#js_code").hide();
+	$("#test_code").hide();
+	$("#dsl_code").show();
+	$("#dsl_button").addClass("bg-washed-green");
+	$("#js_button").removeClass("bg-washed-green");
+	$("#json_button").removeClass("bg-washed-green");
+	// $("#camera_js_code").show();
+});
+
 $("#js_button").click();
 
 $("#scroll_on_button").click(function() {
