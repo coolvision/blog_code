@@ -124,14 +124,34 @@ programs["demo6"] =
 `
 
 20 → [size] -> log(size)
-{t: 'i', l: 'j', d: 'k', r: 'l', shoot: 'n', x: size-1, y: 0, g: 'right', color: 'green'} → push -> [players]
-{t: 'w', l: 'a', d: 's', r: 'd', shoot: 'c', x: 0, y: size-2, g: 'down', color: 'red'} → push -> [players]
+{t: 'i', l: 'j', d: 'k', r: 'l', shoot: 'n', x: size-2, y: 2, g: 'right', color: 'green', 'damage': 0} → push -> [players]
+{t: 'w', l: 'a', d: 's', r: 'd', shoot: 'c', x: 2, y: size-2, g: 'down', color: 'red', 'damage': 0} → push -> [players]
 log(players)
 {x: 0, y: 0, direction: 'right'} -> push -> [shot]
 
 repeat(10hz) -> for p in players -> update_player() -> push -> [shot] -> draw()
 
-repeat(10hz) -> for s in shot -> move_projectile(s)
+repeat(10hz) -> update_shot() -> for s in shot -> move_projectile(s)
+
+repeat(10hz) -> for player in players -> check_collisions()
+
+function check_collisions() {
+	let index = shot.findIndex(s => s.x === player.x && s.y === player.y);
+	if (index > -1 && shot[index].player != player.color) {
+		console.log("collision", index, shot[index].player, player.color);
+		player.damage++;
+		shot.splice(index, 1);
+	}
+}
+
+function update_shot() {
+	for (let s in shot) {
+		if (!(shot[s].x >= 0 && shot[s].x < size && shot[s].y >= 0 && shot[s].y < size)) {
+			console.log("cleanup", s);
+			shot.splice(s, 1);
+		}
+	}
+}
 
 function update_player() {
   key === p.d
@@ -146,7 +166,7 @@ function update_player() {
     : (p.g = p.g)
 	if (key == p.shoot) {
 		console.log("process_keys shoot", key, p);
-		return {x: p.x, y: p.y, direction: p.g};
+		return {x: p.x, y: p.y, direction: p.g, player: p.color};
 	} else {
 		return null;
 	}
@@ -159,7 +179,7 @@ function move_projectile() {
 		'right': shot => (shot.y += 1),
 		'left': shot => (shot.y += -1)
 	}
-	move[s.direction](s);
+	if (s) move[s.direction](s);
 }
 
 function draw() {
@@ -168,6 +188,8 @@ function draw() {
 	canvas_ctx.clearRect(0, 0, canvas.width, canvas.height);
 	let v = 300/20;
 
+	let x = 140;
+	let y = 260;
 	for (let p of players) {
 
 		// canvas_ctx.fillRect(p.y*v, p.x*v, 15, 15);
@@ -206,9 +228,10 @@ function draw() {
 			canvas_ctx.fill();
 		}
 
-
-
-
+		canvas_ctx.fillStyle = p.color;
+		canvas_ctx.font = "16px sans-serif";
+		canvas_ctx.fillText('player ' + p.color + " " + p.damage, x, y)
+		y += 20;
 	}
 	canvas_ctx.fillStyle = 'black';
 	for (let s of shot) {
