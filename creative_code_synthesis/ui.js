@@ -15,13 +15,43 @@ let w = window.innerWidth / parseFloat(
   )['font-size']
 )
 
-$("#highres_render_button").click(function() {
-	ctrl_renderer.setSize(2000, 2000);
-	$("#ctrl_canvas").attr("style", "width: 500px; height: 500px;");
+$("#lowres_render_button").click(function() {
+	// $("#lowres_render_button").addClass("bg-washed-green");
+	// $("#highres_render_button").removeClass("bg-washed-green");
+	ctrl_renderer.setSize(500, 500);
+	ctrl_renderer.render(ctrl_scene, ctrl_camera);
+	// $("#ctrl_canvas").attr("style", "width: 500px; height: 500px;");
+	save_image();
 });
 
-if (w > 48) {
+$("#highres_render_button").click(function() {
+	// $("#highres_render_button").addClass("bg-washed-green");
+	// $("#lowres_render_button").removeClass("bg-washed-green");
+	ctrl_renderer.setSize(4000, 4000);
+	ctrl_renderer.render(ctrl_scene, ctrl_camera);
+	// $("#ctrl_canvas").attr("style", "width: 500px; height: 500px;");
+	save_image();
 	ctrl_renderer.setSize(500, 500);
+});
+
+$("#save_image_button").click(function() {
+	save_image();
+});
+
+function save_image() {
+    var canvas = document.getElementById("ctrl_canvas");
+    var url = canvas.toDataURL();
+    var link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('target', '_blank');
+    link.setAttribute('download', 'image.png');
+    link.click();
+}
+
+ctrl_renderer.setSize(500, 500);
+
+if (w > 48) {
+	// ctrl_renderer.setSize(500, 500);
 	$("#camera_control_on_button").click();
 } else {
 	$("#camera_control_off_button").click();
@@ -85,16 +115,6 @@ $("#dsl_button").click(function() {
 	$("#js_button").removeClass("bg-washed-green");
 	$("#json_button").removeClass("bg-washed-green");
 	// $("#camera_js_code").show();
-});
-
-$("#save_image_button").click(function() {
-    var canvas = document.getElementById("ctrl_canvas");
-    var url = canvas.toDataURL();
-    var link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('target', '_blank');
-    link.setAttribute('download', 'image.png');
-    link.click();
 });
 
 $("#js_button").click();
