@@ -3,7 +3,8 @@ var camera_aspect = 1;
 var camera_near = .1;
 var camera_far = 1000;
 
-var image_size = 300;
+var image_size = 500;
+
 
 // var config = JSON.parse(arrayscript_config);
 // var f = config.functions;
