@@ -1,5 +1,7 @@
 
 $("#three").append(ctrl_renderer.domElement);
+$("#three").append('<div id="lowres_render_button" class="hover-bg-washed-green bl br bb ml2 fw4 f5 ph2 pv1 dib pointer b--gray cl fl">500px</div>');
+$("#three").append('<div id="highres_render_button" class="hover-bg-washed-green bl br bb ml2 fw4 f5 ph2 pv1 dib pointer b--gray fl">4000px</div>');
 // $("#three").prepend(ctrl_renderer.domElement);
 $("#three canvas").attr("id", "ctrl_canvas");
 $("#three canvas").attr("style", "ctrl_canvas");
@@ -48,12 +50,13 @@ function save_image() {
     link.click();
 }
 
-ctrl_renderer.setSize(500, 500);
+
 
 if (w > 48) {
-	// ctrl_renderer.setSize(500, 500);
+	ctrl_renderer.setSize(500, 500);
 	$("#camera_control_on_button").click();
 } else {
+	ctrl_renderer.setSize(300, 300);
 	$("#camera_control_off_button").click();
 }
 
@@ -64,6 +67,21 @@ $(window).on('resize', function(e) {
 	clearTimeout(resizeTimer);
 	resizing = true;
 	resizeTimer = setTimeout(function() {
+
+		let w = window.innerWidth / parseFloat(
+		  getComputedStyle(
+		    document.querySelector('body')
+		  )['font-size']
+		)
+
+		if (w > 48) {
+			ctrl_renderer.setSize(500, 500);
+			$("#camera_control_on_button").click();
+		} else {
+			ctrl_renderer.setSize(300, 300);
+			$("#camera_control_off_button").click();
+		}
+
 		resizing = false;
 	}, 250);
 });
