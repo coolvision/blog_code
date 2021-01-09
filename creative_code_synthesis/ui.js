@@ -1,6 +1,6 @@
 
 $("#three").append(ctrl_renderer.domElement);
-$("#three").append('<div id="lowres_render_button" class="hover-bg-washed-green bl br bb ml2 fw4 f5 ph2 pv1 dib pointer b--gray cl fl">500px</div>');
+$("#three").append('<div id="lowres_render_button" class="hover-bg-washed-green bl br bb fw4 f5 ph2 pv1 dib pointer b--gray cl fl">500px</div>');
 $("#three").append('<div id="highres_render_button" class="hover-bg-washed-green bl br bb ml2 fw4 f5 ph2 pv1 dib pointer b--gray fl">4000px</div>');
 // $("#three").prepend(ctrl_renderer.domElement);
 $("#three canvas").attr("id", "ctrl_canvas");
