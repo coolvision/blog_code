@@ -302,11 +302,11 @@ export function parse(code, program_id) {
 
 function render_expressions(exp, exp_i, fn = false) {
 	let render = "";
-	if (fn) {
+	// if (fn) {
 		render += '<div class="flex flex-wrap items-start">'
-	} else {
-		render += '<div class="flex flex-wrap items-center"><div class="step_exp f7 button mr2 ba dib pointer hover-blue" style="user-select: none;" id="step_' + exp_i + '">step</div><div class="step_over_exp f7 button ba dib pointer hover-blue" style="user-select: none;" id="step_over_' + exp_i + '">step_over</div>'
-	}
+	// } else {
+	// 	render += '<div class="flex flex-wrap items-center"><div class="step_exp f7 button mr2 ba dib pointer hover-blue" style="user-select: none;" id="step_' + exp_i + '">step</div><div class="step_over_exp f7 button ba dib pointer hover-blue" style="user-select: none;" id="step_over_' + exp_i + '">step_over</div>'
+	// }
 
 	for (let el = 0; el < exp.length; el++) {
 		// render += '<span class="'+exp[el].color+'">'+exp[el].code+ '~' + exp[el].id + '</span>'
