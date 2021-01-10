@@ -1,35 +1,41 @@
 ---
 layout: post.njk
-title: "Some interesting applications of program synthesis"
-time: 05/2020
+title: "Interesting applications of program synthesis"
+time: 10/01/2021s
 ---
 
 {% markdown %}
 
-Some of the applications are: smarter intellisense, programming teaching assistants, programming automation tools, verified smart contracts, AI & machine learning.
+I have been collecting some interesting and representative examples of Program Synthesis applications and decided to share it. The list if far from complete of course, I'm sure there are many cool applications that I'm not aware or.
 
-RL modes interpretation, need to find references
+### Interpretable Reinforcement Learning
+[Programmatically Interpretable Reinforcement Learning](https://arxiv.org/pdf/1804.02477.pdf})
+Abhinav Verma, Vijayaraghavan Murali, Rishabh Singh, Pushmeet Kohli, Swarat Chaudhuri
+We present a reinforcement learning framework, called Programmatically Interpretable Reinforcement Learning (PIRL), that is designed to generate interpretable and verifiable agent policies.
+Unlike the popular Deep Reinforcement Learning (DRL) paradigm, which represents policies by neural networks, PIRL represents policies using a high-level, domain-specific programming language.
 
-[http://people.csail.mit.edu/asolar/SynthesisCourse/Lecture1.htm](http://people.csail.mit.edu/asolar/SynthesisCourse/Lecture1.htm)
+### Programming automation tools
+[uizard](https://uizard.io/about/) is building a system for generating an app from hand-drawn sketches. This might be a future of coding.
 
-## FlashFill
+### Programming by example for spreasheets UI (FlashFill)
+This is actually a production feature in Excel
+*Flash Fill automatically fills your data when it senses a pattern. For example, you can use Flash Fill to separate first and last names from a single column, or combine first and last names from two different columns.*
 
-[https://support.office.com/en-us/article/using-flash-fill-in-excel-3f9bcf1e-db93-4890-94a0-1578341f73f7](https://support.office.com/en-us/article/using-flash-fill-in-excel-3f9bcf1e-db93-4890-94a0-1578341f73f7)
+### Smart contracts
+Program synthesis allows to create clean and verifiable smart contracts:
+https://synthetic-minds.com/
+*We build program synthesizers and program verifiers. The former can generate code while the latter can prove code correct. We have built a front-end for them that supports Ethereum's Solidity smart contract language. This allows us to verify the properties/business logic of smart contracts and check their every potential interaction with other contracts (that we synthesize). This way, we can take as input the code for a smart contract, explore its interaction space with other contracts, and then output the code of other contracts that could violate specified properties.*
 
-## Smart contracts
+### Automating programming teaching, and automated grading
+https://people.csail.mit.edu/asolar/SynthesisCourse/Lecture1.htm
 
-[https://synthetic-minds.com/pages/blog/blog-2019-05-12.html](https://synthetic-minds.com/pages/blog/blog-2019-05-12.html)
-
-## Creativity!
-
-[https://www.findaphd.com/phds/project/phd-studentship-in-creative-automated-program-synthesis/?p110819](https://www.findaphd.com/phds/project/phd-studentship-in-creative-automated-program-synthesis/?p110819)
-
-## Code completion
-
+### Smarter code completion, refactoring, and next generation Intellisense
 [https://www.codota.com/](https://www.codota.com/)
-
-Microsoft Program Synthesis using Examples SDK
-
 [https://microsoft.github.io/prose/](https://microsoft.github.io/prose/)
+[https://www.microsoft.com/en-us/research/people/gsoares/](https://www.microsoft.com/en-us/research/people/gsoares/)
+
+### Computational creativity
+electricsheep.org
+https://grgv.xyz/creative_code_synthesis/
 
 {% endmarkdown %}
