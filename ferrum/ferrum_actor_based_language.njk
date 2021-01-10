@@ -1,0 +1,342 @@
+---
+layout: post.njk
+title: "Designing an actor-based programming language"
+time: 10/2020
+---
+
+{% markdown %}
+
+This is one of my attemts at designing a programming language Not a standalone language, rather a DSL built on top of Javascript. Still work in progress, and implementation is in very early stage, only parser is done so far.
+
+## Inspiration
+
+My main inspiration comes from systems like [Observable](observablehq.com) and [Nodes](http://nodes.io), that demonstrate interesting programming paradigms without designing a language from scratch, building on top of Javascript. It's possible to relatively easily explore and prototype different interesting programming paradigms, using web browser as a ubiquitous platform.
+
+Instead of reactive programming like in [Observable](observablehq.com) and [Nodes](http://nodes.io), I decided to explore agent-based modeling systems, similar to products like [hash.ai](http://hash.ai/), and frameworks like [Agents.jl](https://juliadynamics.github.io/Agents.jl/stable/). Another source of inspiration is actor-based languages like Erlang and Elixir, because agent-based systems are often built on top of actor model implementations.
+
+Combining this things, we get an actor-based language, targeting interactive browser-based multi-agent simulations, built as a DSL on top of Javascript.
+
+## Language design
+
+The main requirement for the design is simple and minimal syntax. Another requirement is easy JS interop, so that for any features that are not supported by the language, it's possible to just use inline JS code, or call JS functions.
+
+With this design ideas in mind, after some prototyping and drafting, I based the syntax on python-like style with significant whitespace, and few building blocks:
+
+- define actors/agents that exchange messages
+- agents having named properties for storing state
+- agents use pattern matching for message receiving handlers
+- this handlers can contain: JS functions calls, inline JS code, and message sending and receiving commands.
+- statements that are on the same indentation level are executed in parallel. I'm not sure yet about this feature, and might move to conventional sequential execution by default, with some special syntax for parallel execution.
+
+## Simple example
+
+Starting with a simple "hello world" example, which shows usage of operators for message passing, and is commented to explain the basics of the syntax.
+
+- there are 2 agent modules, *transmitter* and *receiver*
+- *transmitter* defines handler for "start" message, with "+>" operator
+- In the "start" handler, message, "transmitter" sends "hello" message, and message received as a response is logged; then, it sends "start" back to self
+
+```
+// operators:
+// +> receive message
+// -> send message
+// > return to sender
+agent transmitter:
+  +> init:          // receive "init", which is sent on program init by default
+      log(hello)
+        hello -> receiver +> log  // send "hello" to receiver, log returned message
+        sleep(1000)
+          init >    // repeat by sending "init" to self
+
+agent receiver:
+  +> hello: world >  // on receiving "hello", return "world" to sender
+```
+
+## Syntax
+
+__Operators__
+
+```
++>    receive a message
+->    send a message
+>     return to sender
+```
+
+__Keywords__
+
+```
+var, agent, Array, break
+```
+
+__Types__
+
+```
+receiver                  agent, referenced by name
+42                        number
+'x'                       string
+hello                     atom (like in Erlang)
+Array<receiver>(10)       arrays (like in Typescript)
+{'x':0, 'y':0}            JSON literals
+```
+
+__Variable definition__
+
+```
+var foo: 10
+```
+
+__Agent module definition.__ includes definitions for named properties, and messages handlers
+
+```
+agent receiver:
+  x: 0               // first, define named properties
+  y: 'hello'
+    +> init: update >  // next, define handlers for messages
+    +> update: init >
+```
+
+__Inline Javascript code.__ Similar to JS blocks in [Observable language](https://observablehq.com/@observablehq/observables-not-javascript).
+
+```
+{ i++; if (i >= tx_size) exit(); }
+```
+
+__Javascript functions definitions.__ Can be included in the same source file, should be marked with special braces:
+
+{% raw %}
+```
+{%
+function find_neighbours(x, array) {
+  retuen boids.filter(el → x.sub(el.x).length() < neighbours_distance);
+}
+%}
+```
+{% endraw %}
+
+__Builtin functions__
+
+```
+sleep(), log()
+```
+
+## More complicated example
+
+Next example shows multiple agents started with 100ms increments.
+
+```
+var tx_size: 10
+
+agent transmitters:
+  i: 0
+  tx: Array<tx>(tx_size)
+  +> init
+      start -> tx[i]
+      {i++; if (i >= tx_size) break;} // use inline JS code
+        sleep(100)
+          init >
+
+agent tx:
+  +> start:
+      hello -> rx +> log
+      sleep(1000) >
+
+agent rx:
+  +> hello: world >
+```
+
+### Mult-agent simulation example
+
+For even more complex example, I selected multi-agent flocking simulation. Explanations of the "boids" flocking algorithm can be found on pages by [Craig Reynolds](http://www.red3d.com/cwr/boids/) and [Conrad Parker](http://www.kfish.org/boids/). It is often used as a demo for agent-based frameworks, for example:
+
+- hash.ai (Javascript) [https://hash.ai/@stephen_x/boids-2d](https://hash.ai/@stephen_x/boids-2d)
+- Agents.js (Julia) [https://juliadynamics.github.io/Agents.jl/stable/examples/flock/](https://juliadynamics.github.io/Agents.jl/stable/examples/flock/)
+- Mesa (Python) [https://github.com/projectmesa/mesa/tree/master/examples/boid_flockers](https://github.com/projectmesa/mesa/tree/master/examples/boid_flockers)
+
+Runtime is not implemented yet, but at least can discuss some features of the language compared to similar systems.
+
+- It's more compact, ~60LOC, compared to >100LOC for other implementations.
+- another feature is that the main "gist" of the algorithm is outlined within first few dozen lines, and the rest of the code is within a set of utility functions.
+
+I think that this style promotes describing structure of the algorithm in short and concise way, but for now it's just a guess. To check it in practice have to write more code based on the finished language implementation
+
+{% raw %}
+```
+var separation_weight: 0.1
+var alignment_weight: 0.1
+var cohesion_weight: 0.1
+var neighbours_distance: 0.25
+
+agent flock:
+    boids: Array<boid>(25)
+    +> x: find_neighbours(x, boids) >
+    +> init: update >
+    +> update: draw() sleep(10) update >
+
+agent boid:
+    x: {x: 0, y: 0}
+    v: {x: 0, y: 0}
+    +> init: update >
+    +> update:
+        x -> flock +> neighbours
+            separation(x, v, neighbours)
+            align(x, neighbours)
+            align(v, neighbours)
+            {% x.add(v) %}
+                x, v -> sim_space +> x, v
+                    sleep(10) update >
+
+agent sim_space:
+    width: 1.0
+    height: 1.0
+    +> x, v:
+        limit(x, v, 'x')
+        limit(x, v, 'y')
+            x, v >
+
+{%
+
+function find_neighbours(x, array) {
+    retuen boids.filter(el → x.sub(el.x).length() < neighbours_distance);
+}
+
+function separation(x, v, neighbours) {
+    neighbours.map(n => v.add(x.clone().sub(n.x))
+}
+
+function align(property, array) {
+    let values = array.map(a => a[property]);
+    let mean = values.reduce((a, b) => a.add(b)).divideScalar(array.length);
+    boid[property].add(mean.sub(boid[property]));
+}
+
+funciton limit(x, v, axis) {
+    x[axis] < 0 && (v[axis] += 0.05);
+    x[axis] > 1 && (v[axis] -= 0.05);
+}
+
+function draw() {
+    var canvas = document.querySelector("canvas");
+    var canvas_ctx = canvas.getContext("2d");
+    for (let boid of boids) {
+        canvas_ctx.beginPath();
+        canvas_ctx.arc(boid.x.x*500, boid.x.y*500, 1, 0, 2 * Math.PI);
+        canvas_ctx.fill();
+    }
+}
+%}
+```
+{% endraw %}
+
+### Grammar and parser (code, diagrams)
+
+For now the only thing done for the implementation is a parser, that is generated with nearley.js, using moo.js as a lexer. Grammar definition:
+
+{% raw %}
+```
+@{%
+
+let lexer = moo.compile({
+    js_expression_inline: /\{\%.*?\%\}/,
+    js_expression: /\{\%[^]*?\%\}/,
+    js_object: /\{.*?\}/,
+    keyword: ['var', 'agent', 'Array'],
+    comma: ',',
+    lparen: '(',
+    rparen: ')',
+    receive: '+>',
+    send: '->',
+    le: '<',
+    ge: '>',
+    ws: /[ \t]+/,
+    label: /.*?:/,
+    comment: /\/\/.*?$/,
+    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
+    identifier: /[A-Za-z_][A-Za-z0-9_]*/,
+    string: /'.*?'/,
+    nl: { match: /\n/, lineBreaks: true },
+})
+
+%}
+
+@lexer lexer
+
+program -> empty:* expression:*
+    {% function(d) { return d[1]; } %}
+empty -> %nl | %ws
+
+expression -> var | agent
+
+var -> "var" %ws %label %ws %number %nl:+
+    {% function(d) { return [d[0].value, d[2].value, d[4].value] ; } %}
+
+agent -> "agent" %ws %label %nl property:* receiver:* %nl:+
+    {% function(d) { return [d[0].value, d[2].value, d[4], d[5]] ; } %}
+
+property -> %ws %label %ws property_value %nl
+    {% function(d) { return [d[1].value, d[3]] ; } %}
+
+property_value -> %number {% function(d) { return d[0].value; } %}
+                | array_of_agents
+                | %js_object {% function(d) { return d[0].value; } %}
+
+array_of_agents -> "Array" %le %identifier %ge %lparen %number %rparen
+    {% function(d) { return [d[0].value,  d[2].value, d[5].value] } %}
+
+receiver -> %ws %receive %ws %label %nl:? statement:*
+    {% function(d) { return ["receive", d[3].value, d[5]]; } %}
+
+statement -> %ws %identifier args:? %comma:? %nl:?
+            {% function(d) { return d[3]?["id", d[1].value, d[2],
+                                    d[3].value]:["id", d[1].value, d[2]]; } %}
+           | %ws %send {% function(d) { return "send"; } %}
+           | %ws %receive {% function(d) { return "receive"; } %}
+           | %ws %ge %nl:+ {% function(d) { return "return_to_sender"; } %}
+           | %ws %js_expression_inline %nl:* {% function(d) { return d[1].value; } %}
+           | %ws args %nl:* {% function(d) { return d[1]; } %}
+
+args -> %lparen arg:* %rparen
+    {% function(d) { return ["arg", d[1]]; } %}
+
+arg -> arg_value %comma:* %ws:* {% function(d) { return d[0]; } %}
+arg_value -> %identifier {% function(d) { return d[0].value; } %}
+           | %number {% function(d) { return d[0].value; } %}
+           | %string {% function(d) { return d[0].value; } %}
+```
+{% endraw %}
+
+Example of parsing results:
+
+```
+agent transmitter:
+  +> init:
+      log(hello)
+        hello -> receiver +> log
+        sleep(1000)
+          init >
+
+agent receiver:
+  +> hello: world >
+```
+
+```
+[[["agent",
+      "transmitter:",
+      [],
+      [["receive",
+          "init:",
+          [["id", "log", ["arg", ["hello"]]],
+            ["id", "hello", null],
+            "send",
+            ["id", "receiver", null],
+            "receive",
+            ["id", "log", null],
+            ["id", "sleep", ["arg", ["1000"]]],
+            ["id", "init", null],
+            "return_to_sender"]]]]],
+  [["agent",
+      "receiver:",
+      [],
+      [["receive", "hello:", [["id", "world", null], "return_to_sender"]]]]]]
+```
+
+{% endmarkdown %}
