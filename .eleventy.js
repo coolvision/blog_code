@@ -14,9 +14,9 @@ module.exports = function(config) {
     config.addPassthroughCopy({"./aflow/*.css": "./aflow"});
     config.addPassthroughCopy({"./actor_based/*.js": "./actor_based"});
     config.addPassthroughCopy({"./actor_based/*.css": "./actor_based"});
-    config.addPassthroughCopy({"./creative_code_synthesis/*.js": "./creative_code_synthesis"});
-    config.addPassthroughCopy({"./creative_code_synthesis/*.css": "./creative_code_synthesis"});
-    config.addPassthroughCopy({"./creative_code_synthesis/3d_images_selected/*.png": "./creative_code_synthesis/3d_images_selected"});
+    config.addPassthroughCopy({"./generative_art_synthesis/*.js": "./generative_art_synthesis"});
+    config.addPassthroughCopy({"./generative_art_synthesis/*.css": "./generative_art_synthesis"});
+    config.addPassthroughCopy({"./generative_art_synthesis/3d_images_selected/*.png": "./generative_art_synthesis/3d_images_selected"});
     config.addPassthroughCopy({"./inductive_program_synthesis/*.js": "./inductive_program_synthesis"});
     config.addPassthroughCopy({"./program_generation/*.js": "./program_generation"});
 
