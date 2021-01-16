@@ -17,6 +17,21 @@ let w = window.innerWidth / parseFloat(
   )['font-size']
 )
 
+
+$("#camera_control_on_button").click(function() {
+	$("#camera_control_on_button").addClass("bg-washed-green");
+	$("#camera_control_off_button").removeClass("bg-washed-green");
+	// stop_controls = false;
+	controls.enabled = true;
+});
+
+$("#camera_control_off_button").click(function() {
+	$("#camera_control_off_button").addClass("bg-washed-green");
+	$("#camera_control_on_button").removeClass("bg-washed-green");
+	// stop_controls = true;
+	controls.enabled = false;
+});
+
 $("#lowres_render_button").click(function() {
 	// $("#lowres_render_button").addClass("bg-washed-green");
 	// $("#highres_render_button").removeClass("bg-washed-green");
@@ -134,20 +149,6 @@ $("#dsl_button").click(function() {
 });
 
 $("#js_button").click();
-
-$("#camera_control_on_button").click(function() {
-	$("#camera_control_on_button").addClass("bg-washed-green");
-	$("#camera_control_off_button").removeClass("bg-washed-green");
-	// stop_controls = false;
-	controls.enabled = true;
-});
-
-$("#camera_control_off_button").click(function() {
-	$("#camera_control_off_button").addClass("bg-washed-green");
-	$("#camera_control_on_button").removeClass("bg-washed-green");
-	// stop_controls = true;
-	controls.enabled = false;
-});
 
 $("#update").click(function() {
 
@@ -281,17 +282,18 @@ $("#generate").click(function() {
 	generate();
 });
 
-$(".step").click(function() {
+$("#step").click(function() {
+	console.log("step", generating, stop_processing);
 	if (generating) {
 		stop_processing = true;
-	}
-	let demo_id = $(this).parent().attr("id");
- 	select_demo(demo_id);
-	console.log(demo_id, selected_demo, stop_processing);
-	if (!init_generation) {
-		next(true);
-		next(true);
 	} else {
 		next(true);
 	}
+});
+
+$("#reset").click(function() {
+	console.log("reset");
+	$("#js_code").text("");
+	$("#test_code").text("");
+	reset();
 });

@@ -152,15 +152,13 @@ $("#scroll_off_button").click();
 
 $("#camera_control_on_button").click(function() {
 	$("#camera_control_on_button").addClass("bg-washed-green");
-	$("#camera_control_off_button").removeClass("bg-washed-green");
-	// stop_controls = false;
+	$("#camera_control_off_button").removeClass("bg-washed-green");s
 	controls.enabled = true;
 });
 
 $("#camera_control_off_button").click(function() {
 	$("#camera_control_off_button").addClass("bg-washed-green");
 	$("#camera_control_on_button").removeClass("bg-washed-green");
-	// stop_controls = true;
 	controls.enabled = false;
 });
 
