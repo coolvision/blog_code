@@ -51,21 +51,25 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 					}
 				}
 				// and add random variables here
-				// for (t in config.types) {
-				// 	fn.push(["new_variable", t]);
-				// 	console.log("add variable option", config.types[t])
-				// }
+				for (t in config.types) {
+					let n = 0;
+					if (variables.hasOwnProperty(t)) {
+						n = variables[t].length;
+					}
+					fn.push(["let ", config.types[t]+n, t + "??"]);
+				}
 			}
 
 			// case for filling in typed functions arguments
-			if (type == "number_v") {
-				fn.push(["new_variable", "number"]);
-				if (variables.hasOwnProperty("number")) {
-					for (let i = 0; i < variables["number"].length; i++) {
-						fn.push(variables["number"][i]);
-					}
-				}
-			} else if (type != "" && fn_depth > 1) {
+			// if (type == "number_v") {
+			// 	fn.push(["new_variable", "number"]);
+			// 	if (variables.hasOwnProperty("number")) {
+			// 		for (let i = 0; i < variables["number"].length; i++) {
+			// 			fn.push(variables["number"][i]);
+			// 		}
+			// 	}
+			// } else
+			if (type != "" && fn_depth > 1) {
 
 				if (fn_depth <= fn_depth_limit && parent_obj == "let") {
 				// if (fn_depth <= fn_depth_limit) {

@@ -61,70 +61,45 @@ function reset() {
 	console.log("reset", state);
 }
 
-function next(show = false) {
+function next(step = false) {
 	// console.log("next", init_generation);
 	if (!init_generation) {
 		init_generation = true;
  		reset();
 	}
-	findValidProgram(state, task, show);
+	findValidProgram(state, task, step);
 }
 
-function findValidProgram(state, task, show = false) {
-
-	// state.iteration++;
-	//
-	// let prev_program = state.program;
-	// let next_result = next_program_cached(task, state, true);
-	//
-	// let new_program = next_result["program"];
-	//
-	// if (show) {
-	// 	let javascript = json2js(JSON.stringify(new_program), [], true);
-	// 	$("#js_code").text(javascript);
-	// 	$("#test_code").text(JSON.stringify(new_program));
-	// }
-
-
-	// task = JSON.parse(dsl_config);
-	// task.add_random = true;
-	// task.count_all_placeholders = true;
-	//
-	// let N = 500;
-	//
-	// state = {};
-	// state.options_track = new Array(N).fill(-1, 0, N);
-	// state.alt_n = new Array(N).fill(-1, 0, N);
-	// state.filter = new Array(N).fill([], 0, N);
-	// state.programs = new Array(N).fill([], 0, N);
-	// state.js_programs = new Array(N).fill("", 0, N);
-	// task.depth_limit = 0;
-	//
-	// state.program = task.template;
-	// state.step = 0;
-	// state.programs_n = 0;
-	// state.iteration = 0;
-	// state.total = -1;
-
-	// console.log("findValidProgram", state.iter, stop_processing, generating, state.N);
+function findValidProgram(state, task, step = false) {
 
 	let next_result = {};
 	let program = [];
 	let new_program = [];
-	for (let i = 0; i < state.N; i++) {
 
+	if (step) {
 		next_result = next_program_cached(task, state, true);
 
 		new_program = next_result["program"];
 
-		if (new_program.length > 0 && next_result.filter["placeholders_n"] == 0) {
-			// let javascript = json2js(JSON.stringify(new_program), [], true);
-			// console.log("new_program", next_result, javascript)
-			program = new_program;
-			break;
+		let javascript = json2js(JSON.stringify(new_program), [], true);
+		$("#js_code").text(javascript);
+		$("#test_code").text(JSON.stringify(new_program));
+
+	} else {
+		for (let i = 0; i < state.N; i++) {
+
+			next_result = next_program_cached(task, state, true);
+
+			new_program = next_result["program"];
+
+			if (new_program.length > 0 && next_result.filter["placeholders_n"] == 0) {
+				// let javascript = json2js(JSON.stringify(new_program), [], true);
+				// console.log("new_program", next_result, javascript)
+				program = new_program;
+				break;
+			}
 		}
 	}
-
 
 
 	if (new_program.length > 0 && next_result.filter["placeholders_n"] == 0) {

@@ -5,11 +5,8 @@ var dsl_config =
 		{"number": "n",
 		"boolean": "b",
 		"Group": "g",
-		"Vector3": "v",
 		"Mesh": "m",
 		"Geometry": "bg",
-		"Camera": "c",
-		"Euler": "e",
 		"Color": "r",
 		"Material": "mt"},
 	"literals": {"number": [0, 1]},
@@ -43,17 +40,13 @@ var dsl_config =
 		["Math.tan", "number??", "number"],
 		["Math_PI", "number"],
 
-		["if", "boolean??", ["block", "??", "??", "??", "??", "??"], ""],
-		["for", "i", ["block", "??", "??", "??", "??", "??", "??", "??", "??"], "number??", "number??", "number??", ""],
-		["for", "i", ["block", "??", "??", "??", "??", "??", "??", "??", "??"], "0", "50", "1", ""],
-
 		["new THREE.Group", "Group"],
 		[".add", "Group??", "Mesh??", ""],
 		["group.add", "Group??", ""],
 		["group.add", "Mesh??", ""]
 	],
 	"variables_n": 20,
-	"template": ["??", "??", "??", "??", "??", "??", "??", "??"]
+	"template": ["??", "??", "??"]
 }`;
 
 // var dsl_config =
