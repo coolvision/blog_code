@@ -50,8 +50,6 @@ function save_image() {
     link.click();
 }
 
-
-
 if (w > 48) {
 	ctrl_renderer.setSize(500, 500);
 	$("#camera_control_on_button").click();
@@ -137,19 +135,6 @@ $("#dsl_button").click(function() {
 
 $("#js_button").click();
 
-// $("#scroll_on_button").click(function() {
-// 	$("#scroll_on_button").addClass("bg-washed-green");
-// 	$("#scroll_off_button").removeClass("bg-washed-green");
-// 	$(".code_area").css("overflow-y", "scroll");
-// });
-//
-// $("#scroll_off_button").click(function() {
-// 	$("#scroll_off_button").addClass("bg-washed-green");
-// 	$("#scroll_on_button").removeClass("bg-washed-green");
-// 	$(".code_area").css("overflow-y", "hidden");
-// });
-// $("#scroll_off_button").click();
-
 $("#camera_control_on_button").click(function() {
 	$("#camera_control_on_button").addClass("bg-washed-green");
 	$("#camera_control_off_button").removeClass("bg-washed-green");
@@ -163,76 +148,6 @@ $("#camera_control_off_button").click(function() {
 	// stop_controls = true;
 	controls.enabled = false;
 });
-
-// $("#paste").click(function() {
-// 	let program = addProgram();
-// 	addNewCanvas(program);
-// 	$("#test_code").focus();
-// });
-
-// $("#view_add").click(function() {
-//
-// 	// find seleted canvas
-// 	let canvases = $(".canvas_ui");
-// 	let canvas = "";
-// 	let json_script = "";
-// 	let javascript = "";
-// 	let found = false;
-// 	for (cv of canvases) {
-// 		let jq_cv = $(cv);
-//
-// 		if (jq_cv.attr("active") == "true") {
-// 			console.log("active", jq_cv);
-// 			// update program code
-// 			for (s in programs_list) {
-// 				if (programs_list[s].id == jq_cv.attr("index")) {
-// 					json_script = programs_list[s].json_script;
-// 					javascript = programs_list[s].javascript;
-// 					found = true;
-// 					break;
-// 				}
-// 			}
-// 		}
-// 		if (found) break;
-// 	}
-//
-// 	let x = controls.object.position.x;
-// 	let y = controls.object.position.y;
-// 	let z = controls.object.position.z;
-// 	let tx = controls.target.x;
-// 	let ty = controls.target.y;
-// 	let tz = controls.target.z;
-// 	let ux = controls.object.up.x;
-// 	let uy = controls.object.up.y;
-// 	let uz = controls.object.up.z;
-//
-// 	let code = "camera.position.set("
-// 				+ x + "," + y + "," + z
-// 				+ ");"
-// 				+ "camera.up.set("
-// 				+ ux + "," + uy + "," + uz
-// 				+ ");"
-// 				+ "camera.lookAt("
-// 				+ tx + "," + ty + "," + tz
-// 				+ ");";
-// 	console.log(code);
-//
-// 	let program = addProgram(json_script, javascript, code);
-// 	addNewCanvas(program);
-// });
-
-// $("#toggle_non_shaded").click(function() {
-//
-// 	let img = $(".img_objects_count")[0];
-//
-// 	console.log(img, $(".img_objects_count"))
-//
-// 	if ($(img).is(":visible")) {
-// 		$(".img_objects_count").hide();
-// 	} else {
-// 		$(".img_objects_count").show();
-// 	}
-// });
 
 $("#update").click(function() {
 
@@ -279,29 +194,6 @@ $("#update").click(function() {
 		}
 	}
 });
-
-$("#generate").click(function() {
-	// let v = $("#batch_size").val();
-	// let n = 1;
-	// if (v) {
-	// 	n = parseInt(v);
-	// }
-	// console.log($("#batch_size").val(), v, n, $("#batch_size"));
-	generate();
-});
-
-// $("#hide_deleted").click(function() {
-//
-// 	$(".canvas_img_ui").each(function() {
-// 		let jq_image_ui = $(this);
-// 		// let jq_canvas = jq_image_ui.find("canvas");
-// 		let jq_canvas = $(this);
-// 		if (jq_canvas.attr("to_delete") == "true") {
-// 			jq_canvas.hide();
-// 		}
-// 	});
-// });
-
 
 $("#delete_non_starred").click(function() {
 
@@ -371,8 +263,6 @@ $("#delete_non_starred_undo").click(function() {
 					break;
 				}
 			}
-
-			// jq_delete.click();
 		}
 	});
 
@@ -382,36 +272,26 @@ $("#delete_non_starred_undo").click(function() {
 	}
 });
 
-
-// $("#delete_hidden").click(function() {
-// 	let deleted_active = false;
-// 	$(".canvas_img_ui").each(function() {
-// 		let image = $(this);
-// 		let canvas = image.find("canvas");
-// 		// console.log("checking", image, canvas);
-// 		if (canvas.attr("to_delete") == "true") {
-// 			$(this).hide();
-// 			if (canvas.attr("active") == "true") {
-// 				deleted_active = true;
-// 			}
-// 		}
-// 	});
-// 	if (deleted_active) {
-// 		let canvases = $(".canvas_ui");
-// 		// console.log("canvases", canvases);
-// 		for (cv of canvases) {
-// 			// console.log("cv", cv);
-// 			if ($(cv).attr("to_delete") == "false") {
-// 				$(cv).click();
-// 				break;
-// 			}
-// 		}
-// 	}
-// });
-
 $("#stop").click(function() {
-	// $("#one").css("overflow-y", "auto");
-	// $("#ten").css("height", "");
 	generating = false;
 	stop_processing = true;
+});
+
+$("#generate").click(function() {
+	generate();
+});
+
+$(".step").click(function() {
+	if (generating) {
+		stop_processing = true;
+	}
+	let demo_id = $(this).parent().attr("id");
+ 	select_demo(demo_id);
+	console.log(demo_id, selected_demo, stop_processing);
+	if (!init_generation) {
+		next(true);
+		next(true);
+	} else {
+		next(true);
+	}
 });

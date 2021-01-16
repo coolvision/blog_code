@@ -23,7 +23,7 @@ function next_program(config, json_object, i, options_track, alt_n, limit, rando
 
 	let variables_n = 0;
 
-	// console.log("process_template_traverse_dfs", JSON.stringify(filter));
+	console.log("process_template_traverse_dfs", JSON.stringify(filter));
 	// console.log("before limit", filter.variables, filter.alt, limit);
 
 	// limit number of variables
