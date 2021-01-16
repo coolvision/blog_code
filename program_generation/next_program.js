@@ -80,13 +80,13 @@ function next_program(config, json_object, i, options_track, alt_n, limit, rando
 
 		new_variables = [];
 
-		// console.log("new_program", new_program, JSON.stringify(alt_n), JSON.stringify(filter));
+		console.log("new_program", new_program, JSON.stringify(alt_n), JSON.stringify(filter));
 
 		let new_program_expanded = add_variables(config, new_program, -1, 0, filter.variables, new_variables, filter);
 
 		check_infinite(new_program, filter);
 
-		// console.log("new_program_expanded", new_program_expanded, new_variables, JSON.stringify(filter));
+		console.log("new_program_expanded", new_program_expanded, new_variables, JSON.stringify(filter));
 
 		return {"program": new_program_expanded, "filter": filter, "reason": "new_program_expanded"};
 	}

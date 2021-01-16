@@ -58,7 +58,7 @@ function reset() {
 	state.programs_n = 0;
 	state.iteration = 0;
 	state.total = -1;
-	console.log("reset", state);
+	// console.log("reset", state);
 }
 
 function next(step = false) {
@@ -72,6 +72,7 @@ function next(step = false) {
 
 function findValidProgram(state, task, step = false) {
 
+	let prev_program = [];
 	let next_result = {};
 	let program = [];
 	let new_program = [];
@@ -93,14 +94,19 @@ function findValidProgram(state, task, step = false) {
 			new_program = next_result["program"];
 
 			if (new_program.length > 0 && next_result.filter["placeholders_n"] == 0) {
-				// let javascript = json2js(JSON.stringify(new_program), [], true);
-				// console.log("new_program", next_result, javascript)
+				let javascript = json2js(JSON.stringify(new_program), [], true);
+				console.log("new_program", next_result, javascript)
 				program = new_program;
+				break;
+			} else if (new_program.length == 0) {
+				console.log("new_program.length == 0", next_result)
+				new_program = program;
 				break;
 			}
 		}
 	}
 
+	console.log("got new_program", new_program, next_result)
 
 	if (new_program.length > 0 && next_result.filter["placeholders_n"] == 0) {
 
@@ -136,5 +142,14 @@ function findValidProgram(state, task, step = false) {
 		} else {
 			reset();
 		}
+	} else {
+
+
+
+		let script_string = JSON.stringify(program);
+		let javascript = json2js(script_string, [], true);
+		$("#js_code").text(javascript);
+		$("#test_code").text(script_string);
+		reset();
 	}
 }

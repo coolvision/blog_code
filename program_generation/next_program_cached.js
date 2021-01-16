@@ -77,7 +77,7 @@ function next_program_cached(task, state, random = false) {
 		filter.alt_i = state.options_track[i];
 	}
 
-	console.log("state 1", JSON.stringify(filter.alt));
+	// console.log("state 1", JSON.stringify(filter.alt));
 
 	let new_program = alt_dfs(state.program, filter);
 	new_variables = [];
@@ -87,7 +87,6 @@ function next_program_cached(task, state, random = false) {
 	let new_program_expanded = add_variables(task, new_program, -1, 0, filter.variables, new_variables, filter);
 
 	// console.log("add_variables", JSON.stringify(new_program_expanded));
-
 
 
 	// check_infinite(new_program, filter);

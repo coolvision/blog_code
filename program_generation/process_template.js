@@ -52,11 +52,7 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 				}
 				// and add random variables here
 				for (t in config.types) {
-					let n = 0;
-					if (variables.hasOwnProperty(t)) {
-						n = variables[t].length;
-					}
-					fn.push(["let ", config.types[t]+n, t + "??"]);
+					fn.push(["new_variable", t, "no_demand"]);
 				}
 			}
 

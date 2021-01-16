@@ -30,6 +30,8 @@ function json2jsGenerateString(obj, expressions, offset, inline = false, guard =
 	if (!Array.isArray(obj)) {
 		if (obj == "??") {
 			return "";
+		} else if (obj == "~") {
+			return "";
 		} else if (obj.slice(-2) != "??" && obj.includes("??")) {
 			string += indent(offset);
 			string += obj + "\n";

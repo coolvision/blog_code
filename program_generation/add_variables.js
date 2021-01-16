@@ -34,7 +34,11 @@ function add_variables(config, obj, depth, fn_depth, variables, new_variables, f
 				let n = variables[type].length;
 				let new_var = config.types[type] + n;
 				variables[type].push(new_var);
-				obj[i] = new_var;
+				if (obj[i][2] == 'no_demand') {
+					obj[i] = '~';
+				} else {
+					obj[i] = new_var;
+				}
 				new_variables.push([depth, ["let", new_var, type + "??"]]);
 				filter.placeholders_n++;
 			}
