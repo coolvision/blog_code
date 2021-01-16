@@ -46,11 +46,15 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 						if (depth < 0) continue;
 						if (depth >= config.depth_limit+1) continue;
 					}
-
 					if (last(f[i]) == "") {
 						fn.push(initial(f[i]));
 					}
 				}
+				// and add random variables here
+				// for (t in config.types) {
+				// 	fn.push(["new_variable", config.types[t]]);
+				// 	console.log("add variable option", config.types[t])
+				// }
 			}
 
 			// case for filling in typed functions arguments
