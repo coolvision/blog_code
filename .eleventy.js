@@ -16,6 +16,7 @@ module.exports = function(config) {
     config.addPassthroughCopy({"./actor_based/*.css": "./actor_based"});
     config.addPassthroughCopy({"./generative_art_synthesis/*.js": "./generative_art_synthesis"});
     config.addPassthroughCopy({"./generative_art_synthesis/*.css": "./generative_art_synthesis"});
+	config.addPassthroughCopy({"./generative_art_synthesis/program_generation/*.js": "./generative_art_synthesis/program_generation"});
     config.addPassthroughCopy({"./generative_art_synthesis/3d_images_selected/*.png": "./generative_art_synthesis/3d_images_selected"});
     config.addPassthroughCopy({"./inductive_program_synthesis/*.js": "./inductive_program_synthesis"});
     config.addPassthroughCopy({"./program_generation/*.js": "./program_generation"});

@@ -37,47 +37,19 @@ function next_program_cached(task, state, random = false) {
 	state.alt_n[i] = filter.alt.length;
 
 	if (filter.placeholder_i < 0) {
-		// backtrack to previous option
-		state.program = state.programs[state.step-2];
-		state.step -= 1;
-		// console.log("move beack to", state.step, state.program);
-		return {"program": [], "filter": filter, "reason": "filter.placeholder_i < 0"};
+		console.log("filter.placeholder_i < 0", filter);
+		return {"program": state.program, "filter": filter, "reason": "filter.placeholder_i < 0"};
 	}
 	if (filter.alt.length <= 0) {
-		// not sure if it's supposed to happen
-		state.program = state.programs[state.step-2];
-		state.step -= 1;
-		return {"program": [], "filter": filter, "reason": "filter.alt.length <= 0"};
+		console.log("filter.alt.length <= 0", filter);
+		return {"program": state.program, "filter": filter, "reason": "filter.alt.length <= 0"};
 	}
 
 	filter.counter = 0;
 
 	if (random) {
 		filter.alt_i = getRandomInt(0, filter.alt.length-1);
-	} else {
-		if ((state.options_track[i] < 0 && state.options_track[i+1] < 0) ||
-			(state.options_track[i] < 0 && i+1 >= state.options_track.length)) {
-			state.options_track[i] = 0;
-		} else if ((state.options_track[i] >= 0 && state.options_track[i+1] < 0) ||
-				   (state.options_track[i] >= 0 && i+1 >= state.options_track.length)) {
-			state.options_track[i]++;
-			for (let j = i+1; j < state.options_track.length; j++) {
-				state.options_track[j] = -1;
-			}
-			if (state.options_track[i] >= filter.alt.length) {
-				state.options_track[i] = -1;
-				filter.alt_i = state.options_track[i];
-
-				// backtrack to previous option
-				state.program = state.programs[state.step-2];
-				state.step -= 1;
-				return {"program": [], "filter": filter, "reason": "options_track[i] = -1"};
-			}
-		}
-		filter.alt_i = state.options_track[i];
 	}
-
-	// console.log("state 1", JSON.stringify(filter.alt));
 
 	let new_program = alt_dfs(state.program, filter);
 	new_variables = [];
@@ -87,7 +59,6 @@ function next_program_cached(task, state, random = false) {
 	let new_program_expanded = add_variables(task, new_program, -1, 0, filter.variables, new_variables, filter);
 
 	// console.log("add_variables", JSON.stringify(new_program_expanded));
-
 
 	// check_infinite(new_program, filter);
 
@@ -123,29 +94,5 @@ function alt_dfs(obj, filter) {
 		}
 
 		return new_expressions;
-	}
-}
-
-function check_infinite(obj, filter) {
-
-	if (filter.infinite_loop) return;
-
-	if (Array.isArray(obj)) {
-
-		if (obj[0] == "for") {
-			// if (obj[5] == 0) {
-			// 	filter.infinite_loop = true;
-			// }
-			console.log("for", obj[3], obj[4], obj[5]);
-			if (obj[3] < obj[4]) {
-				if (obj[5] <= 0) filter.infinite_loop = true;
-			} else {
-				if (obj[5] >= 0) filter.infinite_loop = true;
-			}
-		}
-
-		for (let i = 0; i < obj.length; i++) {
-			check_infinite(obj[i], filter);
-		}
 	}
 }

@@ -283,7 +283,7 @@ $("#generate").click(function() {
 });
 
 $("#step").click(function() {
-	console.log("step", generating, stop_processing);
+	// console.log("step", generating, stop_processing);
 	if (generating) {
 		stop_processing = true;
 	} else {

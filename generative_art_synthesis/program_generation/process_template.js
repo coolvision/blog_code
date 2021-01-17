@@ -29,10 +29,6 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 
 			let type = obj.slice(0, -2);
 
-			// let type = "";
-			// if (obj[0] == '??') {
-			// 	type = obj.substring(1);
-			// }
 			let fn = [];
 
 			// case for adding expressions without return value
@@ -56,19 +52,10 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 				}
 			}
 
-			// case for filling in typed functions arguments
-			// if (type == "number_v") {
-			// 	fn.push(["new_variable", "number"]);
-			// 	if (variables.hasOwnProperty("number")) {
-			// 		for (let i = 0; i < variables["number"].length; i++) {
-			// 			fn.push(variables["number"][i]);
-			// 		}
-			// 	}
-			// } else
 			if (type != "" && fn_depth > 1) {
 
-				if (fn_depth <= fn_depth_limit && parent_obj == "let") {
-				// if (fn_depth <= fn_depth_limit) {
+				// if (fn_depth <= fn_depth_limit && parent_obj == "let") {
+				if (fn_depth <= fn_depth_limit) {
 					for (let i = 0; i < f_max; i++) {
 						if (last(f[i]) == type) {
 							fn.push(initial(f[i]));
@@ -92,13 +79,12 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 					if (config.add_random) {
 						let r = Math.random();
 						fn.push(r.toFixed(2))
-						// fn.push(Math.random().toFixed(2));
 					} else {
 						for (l of config.literals.number) {
 							fn.push(""+l);
 						}
 					}
-					if (fn_depth > fn_depth_limit) {
+					if (fn_depth < fn_depth_limit) {
 						for (let i = 0; i < f_max; i++) {
 							if (last(f[i]) == "number" && f[i].length <= 3) {
 								fn.push(initial(f[i]));

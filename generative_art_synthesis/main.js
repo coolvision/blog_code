@@ -62,7 +62,7 @@ function reset() {
 }
 
 function next(step = false) {
-	// console.log("next", init_generation);
+	// console.log("next", init_generation, step);
 	if (!init_generation) {
 		init_generation = true;
  		reset();
@@ -71,6 +71,8 @@ function next(step = false) {
 }
 
 function findValidProgram(state, task, step = false) {
+
+	// console.log("findValidProgram step", step);
 
 	let prev_program = [];
 	let next_result = {};
@@ -83,6 +85,9 @@ function findValidProgram(state, task, step = false) {
 		new_program = next_result["program"];
 
 		let javascript = json2js(JSON.stringify(new_program), [], true);
+
+		// console.log("new_program", new_program, javascript);
+
 		$("#js_code").text(javascript);
 		$("#test_code").text(JSON.stringify(new_program));
 
@@ -93,22 +98,19 @@ function findValidProgram(state, task, step = false) {
 
 			new_program = next_result["program"];
 
-			if (new_program.length > 0 && next_result.filter["placeholders_n"] == 0) {
+			if (next_result.filter["placeholders_n"] == 0) {
 				let javascript = json2js(JSON.stringify(new_program), [], true);
-				console.log("new_program", next_result, javascript)
 				program = new_program;
-				break;
-			} else if (new_program.length == 0) {
-				console.log("new_program.length == 0", next_result)
-				new_program = program;
 				break;
 			}
 		}
 	}
 
-	console.log("got new_program", new_program, next_result)
+
 
 	if (new_program.length > 0 && next_result.filter["placeholders_n"] == 0) {
+
+		// console.log("got new_program", new_program, next_result.filter)	
 
 		let script_string = JSON.stringify(new_program);
 
@@ -142,14 +144,12 @@ function findValidProgram(state, task, step = false) {
 		} else {
 			reset();
 		}
-	} else {
-
-
-
-		let script_string = JSON.stringify(program);
-		let javascript = json2js(script_string, [], true);
-		$("#js_code").text(javascript);
-		$("#test_code").text(script_string);
-		reset();
 	}
+	//  else {
+	// 	let script_string = JSON.stringify(program);
+	// 	let javascript = json2js(script_string, [], true);
+	// 	$("#js_code").text(javascript);
+	// 	$("#test_code").text(script_string);
+	// 	reset();
+	// }
 }
