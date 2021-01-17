@@ -2,30 +2,30 @@
 <html lang="en">
 	<head>
 		{% include 'head.njk' %}
-		<link rel="stylesheet" href="/generative_art_synthesis/starter_demo.css">
+		<link rel="stylesheet" href="./starter.css">
 
-		<script src="/lib/lodash.js" ></script>
-		<script src="/lib/jquery-3.3.1.min.js"></script>
-		<script src="/lib/stringify.js"></script>
+		<script src="../lib/lodash.js" ></script>
+		<script src="../lib/jquery-3.3.1.min.js"></script>
+		<script src="../lib/stringify.js"></script>
 
-		<script src="/generative_art_synthesis/three.min.js" ></script>
-		<script src="/generative_art_synthesis/TrackballControls.js"></script>
+		<script src="./three.min.js" ></script>
+		<script src="./TrackballControls.js"></script>
 
-		<script src="/generative_art_synthesis/program_generation/generate_target.js"></script>
-		<script src="/generative_art_synthesis/program_generation/process_template.js"></script>
-		<script src="/generative_art_synthesis/program_generation/add_variables.js"></script>
-		<script src="/generative_art_synthesis/program_generation/next_program_cached.js"></script>
+		<script src="../generate_target.js"></script>
+		<script src="../process_template.js"></script>
+		<script src="../add_variables.js"></script>
+		<script src="../next_program_cached.js"></script>
 
-		<script src="/generative_art_synthesis/dsl_config.js"></script>
-		<script src="/generative_art_synthesis/utils.js"></script>
-		<script src="/generative_art_synthesis/main.js"></script>
-		<script src="/generative_art_synthesis/render.js"></script>
-		<script src="/generative_art_synthesis/add_canvas.js"></script>
-		<script src="/generative_art_synthesis/load.js"></script>
-		<script src="/generative_art_synthesis/save.js"></script>
+		<script src="./dsl_config.js"></script>
+		<script src="./utils.js"></script>
+		<script src="./main.js"></script>
+		<script src="./render.js"></script>
+		<script src="./add_canvas.js"></script>
+		<script src="./load.js"></script>
+		<script src="./save.js"></script>
 	</head>
 
-	<body class="w-100 sans-serif bg-light-gray">
+	<body class="w-100 sans-serif">
 
 		{% include 'header.njk' %}
 
@@ -38,8 +38,6 @@
 					<div id="ui_panel" class="cl fl f3 w-100">
 						<div id="generate" class="f3-ns f4 mb2 mr1 fw4 ba ph2 pv2-ns pv1 db fl pointer hover-blue">Generate</div>
 						<div id="stop" class="f3-ns f4 mb2 mr1 fw4 ba ph2 pv2-ns pv1 db fl pointer hover-blue">Stop</div>
-						<div id="step" class="f3-ns f4 mb2 mr1 fw4 ba ph2 pv2-ns pv1 db fl pointer hover-blue">Step</div>
-						<div id="reset" class="f3-ns f4 mb2 mr1 fw4 ba ph2 pv2-ns pv1 db fl pointer hover-blue">Reset</div>
 						<div class="ml2 fl db">
 							<dd class="f6 ml0">Program №</dd>
 							<dd class="f4 ml0" id="iter_progress">1024</dd>
@@ -48,25 +46,24 @@
 						<div id="code_panel" class="fl cl w-100 mb2">
 							<div id="json_button" class="bl br bt fw4 f5 ph1 pv1 dib cl fl pointer b--gray">JSON</div>
 							<div id="js_button" class="br bt fw4 f5 ph1 pv1 dib fl pointer b--gray">JavaScript</div>
+							<!-- <div id="dsl_button" class="br bt fw4 f5 ph1 pv1 dib fl pointer b--gray">DSL</div> -->
+
+							<div id="scroll_off_button" class="br bt fw4 f5 ph2 pv1 dib fr pointer b--gray">off</div>
+							<div id="scroll_on_button" class="bl br bt fw4 f5 ph2 pv1 dib fr pointer b--gray">on</div>
+							<div class="ml2 fw4 f5 ph2 pv1 dib pointer b--gray fr bg-light-gray">scroll</div>
+
+							<!-- <div id="update_dsl_button" class="bl br bt ml2 fw4 f5 ph2 pv1 dib pointer b--gray fl">update DSL</div> -->
 
 							<div class="bt cl fl w-100">
 								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="test_code"></div>
 								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="js_code"></div>
-								<div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="dsl_code"></div>
+								<!-- <div class="code_area w-100 pa2 f7 cl fl editable_code" contentEditable="plaintext-only" id="dsl_code"></div> -->
 							</div>
 						</div>
 
 					</div>
-				</div>
 
-				<div class="pa3-ns pa2 w-100">
-					<div class="pt0" id="three">
-						<div class="fw4 f5 ph2 pv1 dib pointer b--gray fl bg-light-gray">camera control</div>
-						<div id="camera_control_on_button" class="bl br bt fw4 f5 ph3 pv1 dib pointer b--gray fl">on</div>
-						<div id="camera_control_off_button" class="br bt fw4 f5 ph3 pv1 dib pointer b--gray fl">off</div>
-					</div>
-
-					<div class="cl fl mt2">
+					<div class="cl fl">
 						<div id="delete_non_starred" class="mb2 mr1 fw4 ba ph2 pv1 dib fl pointer hover-blue">Delete unsaved</div>
 						<div id="delete_non_starred_undo" class="mb2 mr1 fw4 ba ph2 pv1 dib fl pointer hover-blue">Undo delete (until page reload)</div>
 					</div>
@@ -81,11 +78,15 @@
 							<!-- <img id="" class="img_objects_count ba b--gray cl fl" style="display: block;"></img> -->
 						</div>
 					</div>
+				</div>
 
+				<div class="pv3-ns pa2 pt0" id="three">
+					<div class="fw4 f5 ph2 pv1 dib pointer b--gray fl bg-light-gray">camera control</div>
+					<div id="camera_control_on_button" class="bl br bt fw4 f5 ph3 pv1 dib pointer b--gray fl">on</div>
+					<div id="camera_control_off_button" class="br bt fw4 f5 ph3 pv1 dib pointer b--gray fl">off</div>
 				</div>
 			</div>
 		</div>
-
 
 		<main>
 			<p style="max-width: none;" class="mh0 ph4-ns ph3 f4-ns f5 flex items-center">09/2019&nbsp;&nbsp;<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
@@ -270,7 +271,7 @@ A collection of resources that were useful for learning about creative coding an
 			</div>
 		</main>
 
-		<script src="./ui_demo.js"></script>
+		<script src="./ui.js"></script>
 		<script>animate(); load_programs();</script>
 
 		{% include 'footer.njk' %}

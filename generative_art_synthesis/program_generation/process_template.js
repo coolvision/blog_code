@@ -47,15 +47,14 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 					}
 				}
 				// and add random variables here
-				for (t in config.types) {
-					fn.push(["new_variable", t, "no_demand"]);
-				}
+				// for (t in config.types) {
+				// 	fn.push(["new_variable", t, "no_demand"]);
+				// }
 			}
 
 			if (type != "" && fn_depth > 1) {
 
-				// if (fn_depth <= fn_depth_limit && parent_obj == "let") {
-				if (fn_depth <= fn_depth_limit) {
+				if (fn_depth <= fn_depth_limit && parent_obj == "let") {
 					for (let i = 0; i < f_max; i++) {
 						if (last(f[i]) == type) {
 							fn.push(initial(f[i]));
@@ -79,6 +78,7 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 					if (config.add_random) {
 						let r = Math.random();
 						fn.push(r.toFixed(2))
+						// fn.push(Math.random().toFixed(2));
 					} else {
 						for (l of config.literals.number) {
 							fn.push(""+l);
