@@ -18,9 +18,12 @@ var dsl_config =
 		["new THREE.TetrahedronBufferGeometry", "number??", "Geometry"],
 		["new THREE.DodecahedronBufferGeometry", "number??", "Geometry"],
 
+		["new Array", "Array"],
+		[".push", "Array??", "number??", "number??", "number??", ""],
+
 		["new THREE.Color", "number??", "number??", "number??", "Color"],
 
-		["new_MeshStandardMaterial", "Color??", "number??", "Material"],
+		["new_LineBasicMaterial", "Color??", "number??", "Material"],
 
 		[">=", "number??", "number??", "boolean"],
 		["<=", "number??", "number??", "boolean"],

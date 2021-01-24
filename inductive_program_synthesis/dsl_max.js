@@ -44,7 +44,9 @@ dsl_config.max =
 	"variables_n": 3,
 	"template": ["??"],
 	"io_examples": [
-		{"input": [4, 3, 8, 2, 5, 1], "output": [8]},
-		{"input": [1, 1, 1, 1, 1, 20, 0, 0], "output": [20]}
+		{"input": [0, 0, 0, 1, 2, 0, 0, 0], "output": [2]},
+		{"input": [1, 4, 3, 2, 1, 0, 1], "output": [4]},
+		{"input": [1, 3, 5, 4, 1, 1, 4, 7, 2], "output": [7]},
+		{"input": [2, 1, 1, 5, 4, 3, 1, 3], "output": [5]}
 	]
 }`;
