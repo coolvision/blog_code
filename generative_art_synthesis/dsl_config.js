@@ -8,16 +8,22 @@ var dsl_config =
 		"Mesh": "m",
 		"Geometry": "bg",
 		"Color": "r",
-		"Material": "mt"},
+		"Material": "mt",
+		"Array": "a"},
 	"literals": {"number": [0, 1]},
 	"variables": {},
 	"functions": [
 		["new_mesh", "Geometry??", "Material??", "Mesh"],
 		["new THREE.BoxBufferGeometry", "number??", "number??", "number??", "Geometry"],
 		["new THREE.TetrahedronBufferGeometry", "number??", "Geometry"],
+		["new THREE.DodecahedronBufferGeometry", "number??", "Geometry"],
+
+		["new Array", "Array"],
+		[".push", "Array??", "number??", "number??", "number??", ""],
 
 		["new THREE.Color", "number??", "number??", "number??", "Color"],
-		["new_MeshStandardMaterial", "Color??", "number??", "number??", "boolean??", "Material"],
+
+		["new_LineBasicMaterial", "Color??", "number??", "Material"],
 
 		[">=", "number??", "number??", "boolean"],
 		["<=", "number??", "number??", "boolean"],
@@ -41,8 +47,8 @@ var dsl_config =
 		["Math_PI", "number"],
 
 		["if", "boolean??", ["block", "??", "??", "??", "??", "??"], ""],
-		["for", "i", ["block", "??", "??", "??", "??", "??"], "number??", "number??", "number??", ""],
-		["for", "i", ["block", "??", "??", "??", "??", "??"], "0", "50", "1", ""],
+		["for", "i", ["block", "??", "??", "??", "??", "??", "??", "??", "??"], "number??", "number??", "number??", ""],
+		["for", "i", ["block", "??", "??", "??", "??", "??", "??", "??", "??"], "0", "50", "1", ""],
 
 		["new THREE.Group", "Group"],
 		[".add", "Group??", "Mesh??", ""],
@@ -50,7 +56,7 @@ var dsl_config =
 		["group.add", "Mesh??", ""]
 	],
 	"variables_n": 20,
-	"template": ["??", "??", "??", "??", "??"]
+	"template": ["??", "??", "??", "??", "??", "??", "??", "??"]
 }`;
 
 // var dsl_config =

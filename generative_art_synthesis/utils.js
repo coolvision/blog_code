@@ -7,9 +7,17 @@ var limit = Number.EPSILON;
 
 function new_MeshStandardMaterial(color,
 	metalness, roughness, wireframe) {
+	// return new THREE.MeshStandardMaterial({color: color,
+	// 	metalness: metalness,
+	// 	roughness: roughness, wireframe: wireframe});
 	return new THREE.MeshStandardMaterial({color: color,
 		metalness: metalness,
-		roughness: roughness, wireframe: wireframe});
+		roughness: roughness, wireframe: false});
+}
+
+function new_LineBasicMaterial(color, width) {
+	return new THREE.LineBasicMaterial({color: color,
+		linewidth: 1});
 }
 
 function new_MeshBasicMaterial(color) {

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - geometry hierarchy</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				background:#fff;
+				padding:0;
+				margin:0;
+				font-weight: bold;
+				overflow:hidden;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="../three.min.js"></script>
+		<!-- <script src="setup.js"></script> -->
+		<script src="../THREE.MeshLine.js"></script>
+
+		<script>
+
+			const renderer = new THREE.WebGLRenderer( { antialias: true } );
+			renderer.setSize(800, 800);
+			const canvas = renderer.domElement;
+			canvas.style.width = '400px';
+			canvas.style.height = '400px';
+			document.body.appendChild(canvas);
+
+			const camera = new THREE.PerspectiveCamera(35, 1, .1, 100);
+			const scene = new THREE.Scene();
+			const group = new THREE.Group();
+
+			// const material = new THREE.MeshNormalMaterial();
+
+			camera.position.set(4,4,4);
+			camera.lookAt( scene.position );
+
+			scene.background = new THREE.Color( 0xffffff );
+
+
+			camera.position.set(5,5,5);
+
+			// const geometry = new THREE.BoxBufferGeometry(1,1,1);
+
+			// const geometry = new THREE.TetrahedronBufferGeometry(1);
+
+
+
+
+			// const cube = new THREE.Mesh(geometry, material);
+			// group.add(cube);
+			// const cube2 = new THREE.Mesh(geometry, material);
+			// group.add(cube2);
+			// const cube3 = new THREE.Mesh(geometry, material);
+			// group.add(cube3);
+			// scene.add(group);
+			//
+			// const f = 0.75
+			// const f2 = 3
+			// cube.scale.set(f,f2,f);
+			// cube2.scale.set(f2,f,f);
+			// cube3.scale.set(f,f,f2);
+
+
+			const points = [];
+			for (let j = 0; j < Math.PI *2 ; j += (2 * Math.PI) / 100) {
+				points.push(Math.cos(j), Math.sin(j), 0);
+			}
+
+			// const geometry = new THREE.Geometry();
+			// for (let j = 0; j < Math.PI; j += 2 * Math.PI / 100) {
+			// 	const v = new THREE.Vector3(Math.cos(j), Math.sin(j), 0);
+			// 	geometry.vertices.push(v);
+			// }
+
+			console.log("points", points)
+
+
+			const line = new MeshLine();
+			line.setPoints(points);
+			// line.setPoints(points, p => 2 + Math.sin(50 * p));
+			// line.setPoints(points, p => 1 - p); // makes width taper
+
+			// const geometry = new THREE.OctahedronBufferGeometry(1);
+			// line.setGeometry( geometry ); //Create your own required geometry
+			// // line.setGeometry( geometry, function( p ) { return 2; } ); // makes width 2 * lineWidth
+			material = new MeshLineMaterial( {
+				color: new THREE.Color(1, 0, 0),
+				opacity: 1,
+				lineWidth: 0.05,
+			});
+
+			const mesh = new THREE.Mesh(line, material);
+			scene.add(mesh);
+
+
+
+			renderer.render(scene, camera);
+
+		</script>
+
+	</body>
+</html>
