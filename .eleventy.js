@@ -19,6 +19,8 @@ module.exports = function(config) {
 	config.addPassthroughCopy({"./generative_art_synthesis/program_generation/*.js": "./generative_art_synthesis/program_generation"});
     config.addPassthroughCopy({"./generative_art_synthesis/3d_images_selected/*.png": "./generative_art_synthesis/3d_images_selected"});
     config.addPassthroughCopy({"./inductive_program_synthesis/*.js": "./inductive_program_synthesis"});
+    config.addPassthroughCopy({"./inductive_program_synthesis2/*.js": "./inductive_program_synthesis2"});
+	config.addPassthroughCopy({"./inductive_program_synthesis2/*.json": "./inductive_program_synthesis2"});	
     config.addPassthroughCopy({"./program_generation/*.js": "./program_generation"});
 
     // config.addPassthroughCopy("../program_synthesis/inductive_demo");

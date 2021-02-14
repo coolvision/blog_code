@@ -1,5 +1,5 @@
 
-var dsl_config =
+var dsl_config_meshline =
 `{
 	"types":
 		{"number": "n",
@@ -9,7 +9,8 @@ var dsl_config =
 		"Geometry": "bg",
 		"Color": "r",
 		"Material": "mt",
-		"Array": "a"},
+		"Array": "a",
+		"MeshLine": "ml"},
 	"literals": {"number": [0, 1]},
 	"variables": {},
 	"functions": [
@@ -18,8 +19,13 @@ var dsl_config =
 		["new THREE.TetrahedronBufferGeometry", "number??", "Geometry"],
 		["new THREE.DodecahedronBufferGeometry", "number??", "Geometry"],
 
+		["new MeshLine", "MeshLine"],
+
 		["new Array", "Array"],
 		[".push", "Array??", "number??", "number??", "number??", ""],
+
+		[".setPoints", "??MeshLine", "Array??"],
+
 
 		["new THREE.Color", "number??", "number??", "number??", "Color"],
 
