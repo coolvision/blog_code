@@ -11,7 +11,8 @@ var selected_problem = 0;
 
 // var iterations = 100;
 // var log_iterations = 100;
-var iterations = 1000;
+// var iterations = 1000;
+var iterations = 1;
 // var log_iterations = 100;
 var log_iterations = 1;
 var time_delay = 5;
@@ -77,12 +78,18 @@ function next(show = false, init = false) {
  	// 	reset();
 	// }
 
+	// console.log("findValidProgramCached state", JSON.stringify(state.program), JSON.stringify(state.options_track), JSON.stringify(state.alt_n));
+
 	findValidProgramCached(state, task, show);
 }
 
 function findValidProgramCached(state, task, show) {
 
-	// console.log("state", state, task);
+	console.log("state", state);
+	if (state.step < 0) {
+		stop_processing = true;
+		return;
+	}
 
 	state.iteration++;
 
@@ -104,14 +111,19 @@ function findValidProgramCached(state, task, show) {
 		}
 	}
 
+	// console.log("next_result", next_result)
+
 	let new_program = next_result["program"];
 	let total = (state.programs_n/state.total_max)*100;
 
+	// if (new_program && (show || state.programs_n % log_iterations == 0)) {
 	if (show || state.programs_n % log_iterations == 0) {
 
 		let javascript = json2js(JSON.stringify(state.program), [], false);
 		$("#" + demo_id + " div" + ".program").text(
 			"#" + state.programs_n
+			+ '\n\n'
+			+ state.step
 			+ '\n\n'
 			+ javascript
 			+ '\n\n'
@@ -144,12 +156,13 @@ function findValidProgramCached(state, task, show) {
 		} else {
 			alt = "<b>backtrack</b>";
 		}
-		// alt += '\n\nDFS tracking:\n'
-		// 	+ JSON.stringify(state.options_track)
-		// 	+ '\n'
-		// 	+ JSON.stringify(state.alt_n)
-		// 	+ '\n\n'
-		// 	+ "Search space size (estimate): " + Number((state.total/1000000).toPrecision(1));
+		alt += '\n\nDFS tracking:\n'
+			+ JSON.stringify(state.options_track)
+			+ '\n'
+			+ JSON.stringify(state.alt_n)
+			+ '\n\n'
+			+ state.step;
+			// + "Search space size (estimate): " + Number((state.total/1000000).toPrecision(1));
 
 		$("#" + demo_id + " div " + ".current_program").html(current_program);
 		$("#" + demo_id + " div " + ".update_info").html(alt);
@@ -167,11 +180,11 @@ function findValidProgramCached(state, task, show) {
 				// if (target == "push") {
 				// 	return Reflect.set(...arguments);
 				// }
-				// if (key === parseInt(key).toString()) {
-				// 	if (key < 0 || key >= target.length) {
-				// 		return true;
-				// 	}
-				// }
+				if (key === parseInt(key).toString()) {
+					if (key < 0 || key >= target.length+1) {
+						return true;
+					}
+				}
 				return Reflect.set(...arguments);
 			},
 			get: function (target, key, receiver) {
@@ -183,6 +196,13 @@ function findValidProgramCached(state, task, show) {
 		var input = new Proxy(input1, set_handler);
 		var output = new Proxy(output1, set_handler);
 
+		if (task["output-type"] == "int") {
+			var output = 0;
+		}
+		if (task["output-type"] == "bool") {
+			var output = false;
+		}
+
 		// console.log("run,",state.programs_n, input, output, '\n'+javascript);
 		let stop_generation = true;
 		let info = "";
@@ -190,8 +210,9 @@ function findValidProgramCached(state, task, show) {
 
 			input1.length = 0;
 			for (let v of task.io_examples[i].input) input1.push(v);
-			output1.length = task.io_examples[i].output.length;
-			output1.fill(0);
+			// output1.length = task.io_examples[i].output.length;
+			output1.length = 0;
+			// output1.fill(0);
 
 			// var input = input1;
 			// var output = output1;
@@ -218,7 +239,7 @@ function findValidProgramCached(state, task, show) {
 				info += "\nincorrect";
 				break;
 			} else {
-				console.log("works for example", JSON.stringify(input), JSON.stringify(output), JSON.stringify(task.io_examples[i].output));
+				// console.log("works for example", JSON.stringify(input), JSON.stringify(output), JSON.stringify(task.io_examples[i].output));
 				info += "\ncorrect result";
 			}
 		}
@@ -261,14 +282,21 @@ function findValidProgramCached(state, task, show) {
 }
 
 function check_example(output1, output2) {
-	if (output1.length == output2.length) {
-		for (let i in output1) {
-			if (output1[i] != output2[i]) {
-				return false;
-			}
-		}
+
+	if (task["output-type"] == "int") {
+		if (output1 != output2) return false;
+	} else if (task["output-type"] == "bool") {
+		if (output1 != output2) return false;
 	} else {
-		return false;
+		if (output1.length == output2.length) {
+			for (let i in output1) {
+				if (output1[i] != output2[i]) {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
 	}
 	return true;
 }

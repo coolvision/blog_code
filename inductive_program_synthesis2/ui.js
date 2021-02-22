@@ -28,10 +28,24 @@ for (d in problems_data) {
 		reset();
 
 		task["io_examples"] = [];
+		task["input-type"] = problems_data[id].type.input;
+		task["output-type"] = problems_data[id].type.output;
 		for (let e in problems_data[id].examples) {
 			task["io_examples"].push({"input": problems_data[id].examples[e]["i"],
 									"output": problems_data[id].examples[e]["o"]});
 		}
+
+		if (task["output-type"] == "int") {
+			task["variables"] = {"number": ["output"], "array": ["input"]};
+			task["functions"][0] = ["=", "output", "number??", ""];
+		}
+		if (task["output-type"] == "bool") {
+			task["variables"] = {"bool": ["output"], "array": ["input"]};
+			task["functions"][0] = ["=", "output", "bool??", ""];
+		}
+
+		$(".task").text(stringify(task));
+
 	});
 
 	$("#problems").append(div);
@@ -49,6 +63,11 @@ $(".generate").click(function() {
 		generate();
 	}
 });
+
+$(".step").click(function() {
+	next(true);
+});
+
 $(".stop").click(function() {
 	stop_processing = true;
 	console.log("stop", "stop_processing", stop_processing);

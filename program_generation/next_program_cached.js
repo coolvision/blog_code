@@ -38,15 +38,27 @@ function next_program_cached(task, state, random = false) {
 
 	if (filter.placeholder_i < 0) {
 		// backtrack to previous option
-		state.program = state.programs[state.step-2];
+		if (state.step-2 < 0) {
+			state.program = state.programs[0];
+		} else {
+			state.program = state.programs[state.step-2];
+		}
 		state.step -= 1;
-		// console.log("move beack to", state.step, state.program);
+		if (state.step < 0) state.step = 0;
+		console.log("move back to", state.step, state.program);
+		// if (state.step < 0) state.step = 0;
 		return {"program": [], "filter": filter, "reason": "filter.placeholder_i < 0"};
 	}
 	if (filter.alt.length <= 0) {
 		// not sure if it's supposed to happen
-		state.program = state.programs[state.step-2];
+		if (state.step-2 < 0) {
+			state.program = state.programs[0];
+		} else {
+			state.program = state.programs[state.step-2];
+		}
 		state.step -= 1;
+		if (state.step < 0) state.step = 0;
+		console.log("filter.alt.length <= 0, move back to", state.step, JSON.stringify(state.program));
 		return {"program": [], "filter": filter, "reason": "filter.alt.length <= 0"};
 	}
 
@@ -69,8 +81,15 @@ function next_program_cached(task, state, random = false) {
 				filter.alt_i = state.options_track[i];
 
 				// backtrack to previous option
-				state.program = state.programs[state.step-2];
+				if (state.step-2 < 0) {
+					state.program = state.programs[0];
+				} else {
+					state.program = state.programs[state.step-2];
+				}
 				state.step -= 1;
+				if (state.step < 0) state.step = 0;
+				console.log("backtrack", state.step, JSON.stringify(state.program));
+				// if (state.step < 0) state.step = 0;
 				return {"program": [], "filter": filter, "reason": "options_track[i] = -1"};
 			}
 		}
@@ -136,7 +155,7 @@ function check_infinite(obj, filter) {
 			// if (obj[5] == 0) {
 			// 	filter.infinite_loop = true;
 			// }
-			console.log("for", obj[3], obj[4], obj[5]);
+			// console.log("for", obj[3], obj[4], obj[5]);
 			if (obj[3] < obj[4]) {
 				if (obj[5] <= 0) filter.infinite_loop = true;
 			} else {

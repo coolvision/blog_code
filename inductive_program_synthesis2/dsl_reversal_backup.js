@@ -27,13 +27,17 @@ dsl_config.reversal_simple =
 dsl_config.reversal =
 `{
 	"types": {"number": "n", "boolean": "b", "array": "a"},
-	"literals": {"number": [0]},
+	"literals": {"number": [0, 1, 2]},
 	"variables": {"array": ["input", "output"]},
 	"functions": [
 		["output.push", "number??", ""],
-		["for", "i", ["block", "??"], "in", "array??", ""]
+		["for", "i", ["block", "??"], "in", "array??", ""],
+		["-", "number??", "number??", "number"],
+		["+", "number??", "number??", "number"],
+		[".length_", "array??", "number"],
+		["get_index", "array??", "number??", "number"]
 	],
-	"variables_n": 1,
+	"variables_n": 2,
 	"template": ["??"],
 	"io_examples": [
 		{"input": [1, 2, 3, 4, 5, 6, 7, 8, 9], "output": [9, 8, 7, 6, 5, 4, 3, 2, 1]},
