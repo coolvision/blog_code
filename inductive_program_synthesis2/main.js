@@ -58,12 +58,14 @@ function reset() {
 	state.alt_n = new Array(N).fill(-1, 0, N);
 	state.filter = new Array(N).fill([], 0, N);
 	state.programs = new Array(N).fill([], 0, N);
-	state.js_programs = new Array(N).fill("", 0, N);
+	// state.js_programs = new Array(N).fill("", 0, N);
 	task.depth_limit = 0;
 
 	state.program = task.template;
 	state.step = 0;
+
 	state.programs_n = 0;
+	// state.programs[0] = task.template;
 	state.iteration = 0;
 	state.total = -1;
 }
@@ -106,7 +108,7 @@ function findValidProgramCached(state, task, show) {
 			if (state.total < 0) {
 				state.total = total_estimate;
 			} else {
-				state.total = state.total * 0.99 + total_estimate * 0.01;
+				state.total = state.total * 0.9 + total_estimate * 0.1;
 			}
 		}
 	}
@@ -137,12 +139,12 @@ function findValidProgramCached(state, task, show) {
 		}
 		$("#" + demo_id + " div " + ".io").text(io);
 
-		let current_program = "<b>current program:</b>\n\n"
-						+ stringify(prev_program)
-						// + '\n\n<b>new program:</b>\n'
-						// + stringify(state.program);
-						+ '\n\n'
-						+ javascript
+		// let current_program = "<b>current program:</b>\n\n"
+		// 				+ stringify(prev_program)
+		// 				// + '\n\n<b>new program:</b>\n'
+		// 				// + stringify(state.program);
+		// 				+ '\n\n'
+		// 				+ javascript
 
 		let alt = "";
 		if (next_result.filter.alt_i >= 0) {
@@ -154,7 +156,7 @@ function findValidProgramCached(state, task, show) {
 			}
 			alt += '\n\n<b>use option ' + next_result.filter.alt_i + "</b>\n" + JSON.stringify(next_result.filter.alt[next_result.filter.alt_i])
 		} else {
-			alt = "<b>backtrack</b>";
+			alt = "<b>backtrack</b> " + next_result.reason;
 		}
 		alt += '\n\nDFS tracking:\n'
 			+ JSON.stringify(state.options_track)
@@ -164,7 +166,10 @@ function findValidProgramCached(state, task, show) {
 			+ state.step;
 			// + "Search space size (estimate): " + Number((state.total/1000000).toPrecision(1));
 
-		$("#" + demo_id + " div " + ".current_program").html(current_program);
+		for (let i in state.programs) {
+			alt += '\n' + JSON.stringify(state.programs[i]);
+		}
+		// $("#" + demo_id + " div " + ".current_program").html(current_program);
 		$("#" + demo_id + " div " + ".update_info").html(alt);
 	}
 

@@ -38,26 +38,26 @@ function next_program_cached(task, state, random = false) {
 
 	if (filter.placeholder_i < 0) {
 		// backtrack to previous option
-		if (state.step-2 < 0) {
+		if (state.step-1 < 0) {
 			state.program = state.programs[0];
 		} else {
-			state.program = state.programs[state.step-2];
+			state.program = state.programs[state.step-1];
 		}
 		state.step -= 1;
-		if (state.step < 0) state.step = 0;
+		// if (state.step < 0) state.step = 0;
 		console.log("move back to", state.step, state.program);
 		// if (state.step < 0) state.step = 0;
 		return {"program": [], "filter": filter, "reason": "filter.placeholder_i < 0"};
 	}
 	if (filter.alt.length <= 0) {
 		// not sure if it's supposed to happen
-		if (state.step-2 < 0) {
+		if (state.step-1 < 0) {
 			state.program = state.programs[0];
 		} else {
-			state.program = state.programs[state.step-2];
+			state.program = state.programs[state.step-1];
 		}
 		state.step -= 1;
-		if (state.step < 0) state.step = 0;
+		// if (state.step < 0) state.step = 0;
 		console.log("filter.alt.length <= 0, move back to", state.step, JSON.stringify(state.program));
 		return {"program": [], "filter": filter, "reason": "filter.alt.length <= 0"};
 	}
@@ -81,13 +81,13 @@ function next_program_cached(task, state, random = false) {
 				filter.alt_i = state.options_track[i];
 
 				// backtrack to previous option
-				if (state.step-2 < 0) {
+				if (state.step-1 < 0) {
 					state.program = state.programs[0];
 				} else {
-					state.program = state.programs[state.step-2];
+					state.program = state.programs[state.step-1];
 				}
 				state.step -= 1;
-				if (state.step < 0) state.step = 0;
+				// if (state.step < 0) state.step = 0;
 				console.log("backtrack", state.step, JSON.stringify(state.program));
 				// if (state.step < 0) state.step = 0;
 				return {"program": [], "filter": filter, "reason": "options_track[i] = -1"};
@@ -106,11 +106,9 @@ function next_program_cached(task, state, random = false) {
 	let new_program_expanded = add_variables(task, new_program, -1, 0, filter.variables, new_variables, filter);
 
 	// console.log("add_variables", JSON.stringify(new_program_expanded));
-
-
 	// check_infinite(new_program, filter);
 
-	state.programs[i] = new_program_expanded;
+	state.programs[i] = state.program;
 	state.program = new_program_expanded;
 	state.step++;
 
