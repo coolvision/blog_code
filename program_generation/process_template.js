@@ -65,7 +65,8 @@ function process_template_traverse_dfs(config, obj, filter, depth, fn_depth, var
 			// 		}
 			// 	}
 			// } else
-			if (type != "" && fn_depth > 1) {
+			// if (type != "" && fn_depth > 1) {
+			if (type != "") {
 
 				if (fn_depth <= fn_depth_limit && parent_obj == "let") {
 				// if (fn_depth <= fn_depth_limit) {

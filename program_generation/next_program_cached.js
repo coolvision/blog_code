@@ -24,6 +24,8 @@ function next_program_cached(task, state, random = false) {
 	// first, choose a template parameter to change
 	process_template_traverse_dfs(task, state.program, filter, -1, 0, variables);
 
+	// console.log("state 1", JSON.stringify(state.program), JSON.stringify(filter));
+
 	// limit number of variables
 	for (v in filter.variables) {
 		if (filter.variables[v].length >= task.variables_n) {
@@ -45,7 +47,7 @@ function next_program_cached(task, state, random = false) {
 		}
 		state.step -= 1;
 		// if (state.step < 0) state.step = 0;
-		console.log("move back to", state.step, state.program);
+		// console.log("move back to", state.step, state.program);
 		// if (state.step < 0) state.step = 0;
 		return {"program": [], "filter": filter, "reason": "filter.placeholder_i < 0"};
 	}
@@ -58,7 +60,7 @@ function next_program_cached(task, state, random = false) {
 		}
 		state.step -= 1;
 		// if (state.step < 0) state.step = 0;
-		console.log("filter.alt.length <= 0, move back to", state.step, JSON.stringify(state.program));
+		// console.log("filter.alt.length <= 0, move back to", state.step, JSON.stringify(state.program));
 		return {"program": [], "filter": filter, "reason": "filter.alt.length <= 0"};
 	}
 
@@ -88,7 +90,7 @@ function next_program_cached(task, state, random = false) {
 				}
 				state.step -= 1;
 				// if (state.step < 0) state.step = 0;
-				console.log("backtrack", state.step, JSON.stringify(state.program));
+				// console.log("backtrack", state.step, JSON.stringify(state.program));
 				// if (state.step < 0) state.step = 0;
 				return {"program": [], "filter": filter, "reason": "options_track[i] = -1"};
 			}
@@ -96,7 +98,7 @@ function next_program_cached(task, state, random = false) {
 		filter.alt_i = state.options_track[i];
 	}
 
-	// console.log("state 1", JSON.stringify(filter.alt));
+	// console.log("state 2", JSON.stringify(filter));
 
 	let new_program = alt_dfs(state.program, filter);
 	new_variables = [];
@@ -104,6 +106,8 @@ function next_program_cached(task, state, random = false) {
 	// console.log("new_program 1", JSON.stringify(new_program));
 
 	let new_program_expanded = add_variables(task, new_program, -1, 0, filter.variables, new_variables, filter);
+
+	// console.log("state 3", JSON.stringify(filter));
 
 	// console.log("add_variables", JSON.stringify(new_program_expanded));
 	// check_infinite(new_program, filter);

@@ -11,10 +11,10 @@ var selected_problem = 0;
 
 // var iterations = 100;
 // var log_iterations = 100;
-// var iterations = 1000;
-var iterations = 1;
-// var log_iterations = 100;
-var log_iterations = 1;
+var iterations = 1000;
+// var iterations = 1;
+var log_iterations = 100;
+// var log_iterations = 1;
 var time_delay = 5;
 
 var now1, now2;
@@ -87,8 +87,9 @@ function next(show = false, init = false) {
 
 function findValidProgramCached(state, task, show) {
 
-	console.log("state", state);
+	// console.log("state", state);
 	if (state.step < 0) {
+		console.log("state.step < 0", state);
 		stop_processing = true;
 		return;
 	}
@@ -130,6 +131,8 @@ function findValidProgramCached(state, task, show) {
 			+ javascript
 			+ '\n\n'
 			+ JSON.stringify(state.program)
+			+ '\n\n'
+			+ "Search space size (estimate): " + Number((state.total/1000000).toPrecision(1))
 		);
 		let io = "";
 		for (let i in task.io_examples) {
@@ -164,11 +167,10 @@ function findValidProgramCached(state, task, show) {
 			+ JSON.stringify(state.alt_n)
 			+ '\n\n'
 			+ state.step;
-			// + "Search space size (estimate): " + Number((state.total/1000000).toPrecision(1));
 
-		for (let i in state.programs) {
-			alt += '\n' + JSON.stringify(state.programs[i]);
-		}
+		// for (let i in state.programs) {
+		// 	alt += '\n' + JSON.stringify(state.programs[i]);
+		// }
 		// $("#" + demo_id + " div " + ".current_program").html(current_program);
 		$("#" + demo_id + " div " + ".update_info").html(alt);
 	}
@@ -265,6 +267,8 @@ function findValidProgramCached(state, task, show) {
 			);
 			$("#" + demo_id + " div " + ".program").addClass("bg-washed-green");
 			$("#" + demo_id + " div " + ".result").addClass("bg-washed-green");
+
+			console.log("Found program #" + state.programs_n, state);
 
 			stop_processing = true;
 			return;

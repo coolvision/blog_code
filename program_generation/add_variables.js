@@ -7,7 +7,7 @@ function add_variables(config, obj, depth, fn_depth, variables, new_variables, f
 		if (config.count_all_placeholders) {
 			if (obj.includes("??")) filter.placeholders_n++;
 		} else {
-			if (obj.includes("??") && fn_depth > 1) filter.placeholders_n++;
+			if (obj.includes("??") && (fn_depth > 1 || obj != "??")) filter.placeholders_n++;
 		}
 		return obj;
 	} else {
