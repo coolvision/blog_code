@@ -27,6 +27,8 @@ function add_variables(config, obj, depth, fn_depth, variables, new_variables, f
 
 			if (obj[i][0] == "new_variable") {
 
+				// console.log("variables1", JSON.stringify(variables))
+
 				let type = obj[i][1];
 				if (!variables.hasOwnProperty(type)) {
 					variables[type] = [];

@@ -30,7 +30,6 @@ dsl_config.reversal =
 	"literals": {"number": [0, 1, 2]},
 	"variables": {"array": ["input"]},
 	"functions": [
-		["for", "i", ["block", "??"], "in", "array??", ""],
 		["output.push", "number??", ""],
 		["+", "number??", "number??", "number"],
 		["-", "number??", "number??", "number"],
@@ -43,15 +42,12 @@ dsl_config.reversal =
 		["if", "boolean??", ["block", "??"], ""]
 	],
 	"variables_n": 2,
-	"template": ["??"],
+	"template": ["for", "i", ["block", "??"], "in", "input"],
 	"io_examples": [
 		{"input": [1, 2, 3, 4, 5, 6, 7, 8, 9], "output": [9, 8, 7, 6, 5, 4, 3, 2, 1]},
 		{"input": [5, 2, 7, 6], "output": [6, 7, 2, 5]}
 	]
 }`;
-
-
-// "template": ["for", "i", ["block", "??"], "in", "input"],
 
 		// ["set_index", "output", "number??", "number??", ""],
 		// ["<", "number??", "number??", "boolean"],

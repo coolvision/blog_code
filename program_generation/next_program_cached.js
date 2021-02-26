@@ -27,12 +27,16 @@ function next_program_cached(task, state, random = false) {
 	// console.log("state 1", JSON.stringify(state.program), JSON.stringify(filter));
 
 	// limit number of variables
+	let total_vars = 0;
 	for (v in filter.variables) {
-		if (filter.variables[v].length >= task.variables_n) {
+		total_vars += filter.variables[v].length;
+		if (total_vars >= task.variables_n) {
 			let filtered = filter.alt.filter(function(alt, i) {
-				return !(alt[0] == "new_variable" && alt[1] == v);
+				// return !(alt[0] == "new_variable" && alt[1] == v);
+				return !(alt[0] == "new_variable");
 			});
 			filter.alt = filtered;
+			break;
 		}
 	}
 
@@ -103,7 +107,7 @@ function next_program_cached(task, state, random = false) {
 	let new_program = alt_dfs(state.program, filter);
 	new_variables = [];
 
-	// console.log("new_program 1", JSON.stringify(new_program));
+	// console.log("add_variables1", JSON.stringify(new_program), JSON.stringify(filter.variables));
 
 	let new_program_expanded = add_variables(task, new_program, -1, 0, filter.variables, new_variables, filter);
 

@@ -230,7 +230,12 @@ function json2jsGenerateString(obj, expressions, offset, inline = false, guard =
 
 		if (!inline) string += indent(offset); // indentation
 
-		if (obj[0].match(unary)) {
+
+		if (obj[0] == "!") {
+
+			string += obj[0] + obj[1];
+
+		} else if (obj[0].match(unary)) {
 
 			// unary operator
 			string += obj[1] + obj[0];

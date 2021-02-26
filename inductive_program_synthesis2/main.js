@@ -220,6 +220,12 @@ function findValidProgramCached(state, task, show) {
 			// output1.length = task.io_examples[i].output.length;
 			output1.length = 0;
 			// output1.fill(0);
+			if (task["output-type"] == "int") {
+				output = 0;
+			}
+			if (task["output-type"] == "bool") {
+				output = false;
+			}
 
 			// var input = input1;
 			// var output = output1;
@@ -235,6 +241,12 @@ function findValidProgramCached(state, task, show) {
 				}
 			}
 			// console.log("eval2", JSON.stringify(input), JSON.stringify(output));
+
+			if (task["output-type"] == "list-of-bool") {
+				for (let i in output) {
+					output[i] = Boolean(output[i]);
+				}
+			}
 
 			if (i > 0) info += "\n\n";
 			info += "input: " + JSON.stringify(input) + "\n"

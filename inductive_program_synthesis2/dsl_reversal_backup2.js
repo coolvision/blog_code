@@ -28,30 +28,23 @@ dsl_config.reversal =
 `{
 	"types": {"number": "n", "boolean": "b", "array": "a"},
 	"literals": {"number": [0, 1, 2]},
-	"variables": {"array": ["input"]},
+	"variables": {"array": ["input", "output"]},
 	"functions": [
-		["for", "i", ["block", "??"], "in", "array??", ""],
 		["output.push", "number??", ""],
-		["+", "number??", "number??", "number"],
 		["-", "number??", "number??", "number"],
-		["%", "number??", "number??", "number"],
-		[">=", "number??", "number??", "boolean"],
-		["==", "number??", "number??", "boolean"],
-		["Boolean", "number??", "boolean"],
-		["!", "boolean??", "boolean"],
+		["+", "number??", "number??", "number"],
+		[".length_", "array??", "number"],
 		["get_index", "array??", "number??", "number"],
+		[">", "number??", "number??", "boolean"],
 		["if", "boolean??", ["block", "??"], ""]
 	],
-	"variables_n": 2,
-	"template": ["??"],
+	"variables_n": 4,
+	"template": ["for", "i", ["block", "??"], "in", "array??"],
 	"io_examples": [
 		{"input": [1, 2, 3, 4, 5, 6, 7, 8, 9], "output": [9, 8, 7, 6, 5, 4, 3, 2, 1]},
 		{"input": [5, 2, 7, 6], "output": [6, 7, 2, 5]}
 	]
 }`;
-
-
-// "template": ["for", "i", ["block", "??"], "in", "input"],
 
 		// ["set_index", "output", "number??", "number??", ""],
 		// ["<", "number??", "number??", "boolean"],

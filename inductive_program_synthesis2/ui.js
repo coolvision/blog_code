@@ -37,12 +37,16 @@ for (d in problems_data) {
 
 		if (task["output-type"] == "int") {
 			task["variables"] = {"number": ["output"], "array": ["input"]};
-			task["functions"][0] = ["=", "output", "number??", ""];
+			task["functions"][1] = ["=", "output", "number??", ""];
 		}
 		if (task["output-type"] == "bool") {
 			task["variables"] = {"bool": ["output"], "array": ["input"]};
-			task["functions"][0] = ["=", "output", "bool??", ""];
+			task["functions"][1] = ["=", "output", "boolean??", ""];
 		}
+		if (task["output-type"] == "list-of-bool") {
+			task["functions"][1] = ["output.push", "boolean??", ""];
+		}
+
 
 		$(".task").text(stringify(task));
 
