@@ -37,17 +37,21 @@ dsl_config.reversal =
 		["%", "number??", "number??", "number"],
 		[">=", "number??", "number??", "boolean"],
 		["==", "number??", "number??", "boolean"],
+		["input.length_", "number"],
 		["Boolean", "number??", "boolean"],
 		["!", "boolean??", "boolean"],
 		["get_index", "array??", "number??", "number"],
 		["if", "boolean??", ["block", "??"], ""]
 	],
-	"variables_n": 2,
+	"variables_n": 0,
+	"depth_limit": 0,
 	"template": ["??"],
 	"io_examples": [
 		{"input": [1, 2, 3, 4, 5, 6, 7, 8, 9], "output": [9, 8, 7, 6, 5, 4, 3, 2, 1]},
 		{"input": [5, 2, 7, 6], "output": [6, 7, 2, 5]}
-	]
+	],
+	"total_correct": 0,
+	"best_total_correct": 0
 }`;
 
 
