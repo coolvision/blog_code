@@ -11,15 +11,51 @@
 		<script src="../program_generation/process_template.js"></script>
 		<script src="../program_generation/add_variables.js"></script>
 		<script src="../program_generation/next_program_cached.js"></script>
+		<script src="../program_generation/frequency.js"></script>
 
 		<script src="./list_data.json"></script>
 		<script src="./dsl_reversal.js"></script>
-		<!-- <script src="./dsl_sum.js"></script> -->
-		<!-- <script src="./dsl_max.js"></script> -->
+
 		<script src="./main.js"></script>
 	</head>
 	<body class="w-100 sans-serif">
 		{% include 'header.njk' %}
+
+		<main>
+
+		<p style="max-width: none;" class="mh0 ph4-ns ph3 f4-ns f5 flex items-center">02/2021&nbsp;&nbsp;<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+		<h1 class="near-black ph4-ns ph3 fw5 f1-ns f2 measure">Program synthesis in Javascript: benchmarking on a list processing dataset</h1>
+		<div class="ph4-ns ph3 f4-ns content lh-copy">
+
+{% markdown %}
+
+In my [previous post](https://grgv.xyz/inductive_program_synthesis/), I described inductive program synthesis of simple JS programs. It was more of a toy example, demonstrating solutions for only a few pre-selected fine-tuned problems.
+
+Next, I was interested to find out how program synthesis in JS would compare to other approaches, tested on a larger, reasonably challenging dataset.
+
+A dataset of list processing tasks used in several recent papers (EC<sup>2</sup> [1], and DreamCoder [2]), that demonstrate state of the art results for several synthesis problems seems like a good fit.
+
+Of course, my demo implements only the first step of algorithms described in [1,2]. They push it further by adding probabilistic modes, library learning, and deep learning on top. But still, getting reasonable performance on just the first step is good for learning more about program synthesis.
+
+I used the dataset included with [EC<sup>2</sup>/DreamCoder source](https://github.com/ellisk42/ec/blob/master/data/list_tasks.json), which contains 217 list processing tasks. I applied a program search algorithm [described previously](https://grgv.xyz/inductive_program_synthesis/), with a DSL similar to described in EC<sup>2</sup> paper [1]. The main difference is that EC<sup>2</sup> is using a lisp-like language and functional programming, while I'm using imperative JS code, with [static single assignment](https://en.wikipedia.org/wiki/Static_single_assignment_form) of variables.
+
+Search is done in several passes, with an increasing allowed number of variables on each pass (which increases program complexity, and search time).
+
+The results are: 80/217 problems solved (37%), with average ~40s search time. This is (accidentally) very close to results in [1], which reports 37% tasks solved with average 20s search time, when only enumeration part of the algorithm is used (see Table 3 in [1]).
+
+Results can be reproduced in the demo below, press "generate all" to see generation progress. Many solutions are found within the first few minutes, but later search for harder problems can take almost 2 hours (up to 40s per each of 217 tasks).
+
+### References
+1. Kevin Ellis, Lucas Morales, Mathias Sable-Meyer, Armando Solar-Lezama, and Josh Tenenbaum. ´
+Library learning for neurally-guided bayesian program induction. In NeurIPS, 2018.
+2. Kevin Ellis, Catherine Wong, Maxwell Nye, Mathias Sable-Meyer, Luc Cary, Lucas Morales,
+Luke Hewitt, Armando Solar-Lezama, and Joshua B. Tenenbaum. Dreamcoder: Growing
+generalizable, interpretable knowledge with wake-sleep bayesian program learning, 2020.
+
+
+{% endmarkdown %}
+
+		</main>
 
 		<div id="demo1" class="ph4-ns ph3 pv3 bb">
 
@@ -30,6 +66,7 @@
 			<div class="generate button f3-ns f4 mr1 fw4 ba ph2 pv1 dib pointer hover-blue">generate selected</div>
 			<div class="stop button f3-ns f4 mr1 fw4 ba ph2 pv1 dib pointer hover-blue">stop</div>
 			<div class="step button f3-ns f4 mr1 fw4 ba ph2 pv1 dib pointer hover-blue">step</div>
+			<!-- <div class="frequency button f3-ns f4 mr1 fw4 ba ph2 pv1 dib pointer hover-blue">expressions frequnecy</div> -->
 			<!-- <div class="reset button f3-ns f4 mr1 fw4 ba ph2 pv1 dib pointer hover-blue">reset</div> -->
 
 			<div class="grid f6 mt3">

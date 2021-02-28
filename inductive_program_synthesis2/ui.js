@@ -59,10 +59,10 @@ for (id in problems_data) {
 		task["variables"].boolean.push("output");
 		task["functions"][1] = ["=", "output", "boolean??", ""];
 	} else if (task["output-type"] == "list-of-bool") {
-		task["variables"].array.push("output");
+		// task["variables"].array.push("output");
 		task["functions"][1] = ["output.push", "boolean??", ""];
 	} else if (task["output-type"] == "list-of-int") {
-		task["variables"].array.push("output");
+		// task["variables"].array.push("output");
 	}
 
 	if (task["input-type"] == "int") {
@@ -85,7 +85,7 @@ $(".generate_all").click(function() {
 	console.log("generate_all", "generating", generating);
 
 	for (let t in tasks) {
-		tasks[t].task.variables_n++;
+		tasks[t].task.variables_n = 1;
 	}
 
 	if (!generating) {
@@ -95,7 +95,33 @@ $(".generate_all").click(function() {
 	}
 });
 
+$(".frequency").click(function() {
+
+	console.log("frequency", tasks)
+
+	filter = {
+		expr: {}
+	};
+
+	for (let t in tasks) {
+		if (tasks[t].solved) {
+			console.log("frequency2", tasks[t].task.program, filter);
+			for (let expr of tasks[t].task.program) {
+				count_args(expr, filter);
+			}
+			console.log("program", tasks[t].task.program);
+			console.log("filter", filter);
+			// break;
+		}
+	}
+});
+
 $(".generate").click(function() {
+
+	for (let t in tasks) {
+		tasks[t].task.variables_n = 3;
+	}
+
 	// select_demo($(this).parent().attr("id"));
 	console.log("generate", "generating", generating);
 	if (!generating) {
@@ -110,5 +136,6 @@ $(".step").click(function() {
 
 $(".stop").click(function() {
 	stop_processing = true;
+	stop_batch_processing = true;
 	console.log("stop", "stop_processing", stop_processing);
 });

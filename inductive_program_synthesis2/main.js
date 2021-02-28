@@ -1,5 +1,6 @@
 
 var stop_processing = false;
+var stop_batch_processing = false;
 var init_generation = false;
 var generating = false;
 var task = {};
@@ -11,7 +12,7 @@ var selected_problem = 0;
 
 // var iterations = 100;
 // var log_iterations = 100;
-var iterations = 1000;
+var iterations = 5000;
 // var iterations = 1;
 var log_iterations = 100;
 // var log_iterations = 1;
@@ -55,8 +56,13 @@ function generate_tasks(tasks, task_i) {
 		stop_processing = false;
 		// generating = false;
 
+		if (stop_batch_processing) {
+			stop_batch_processing = false;
+			generating = false;
+			return;
+		}
+
 		for (let t in tasks) {
-			tasks[t].time
 			$("#"+tasks[t].i).text(tasks[t].id +
 				" t:" + tasks[t].time/1000 + " " + tasks[t].task.best_total_correct);
 		}
@@ -70,8 +76,16 @@ function generate_tasks(tasks, task_i) {
 
 		if (task_i >= tasks.length) {
 			console.log("tasks", task_i, tasks.length, found_n, tasks);
-			generating = false;
-			return;
+
+			for (let t in tasks) {
+				tasks[t].task.variables_n++;
+			}
+			task_i = 0;
+
+			if (tasks[0].task.variables_n >= 5) {
+				generating = false;
+				return;
+			}
 		}
 
 		reset();
@@ -237,10 +251,13 @@ function findValidProgramCached(state, config, show) {
 				return Reflect.get(...arguments);
 			},
 		};
-		var input1 = [];
-		var output1 = [];
-		var input = new Proxy(input1, set_handler);
-		var output = new Proxy(output1, set_handler);
+		// var input1 = [];
+		// var output1 = [];
+		// var input = new Proxy(input1, set_handler);
+		// var output = new Proxy(output1, set_handler);
+
+		var input = [];
+		var output = [];
 
 		if (task["output-type"] == "int") {
 			var output = 0;
@@ -261,8 +278,8 @@ function findValidProgramCached(state, config, show) {
 			if (task["input-type"] == "int") {
 				input = task.io_examples[i].input;
 			} else {
-				input1.length = 0;
-				for (let v of task.io_examples[i].input) input1.push(v);
+				input.length = 0;
+				for (let v of task.io_examples[i].input) input.push(v);
 			}
 
 			if (task["output-type"] == "int") {
@@ -270,7 +287,7 @@ function findValidProgramCached(state, config, show) {
 			} else if (task["output-type"] == "bool") {
 				output = false;
 			} else {
-				output1.length = 0;
+				output.length = 0;
 			}
 
 			// console.log("eval1", JSON.stringify(input), JSON.stringify(output), task.io_examples[i].output.length);
@@ -294,16 +311,8 @@ function findValidProgramCached(state, config, show) {
 			// console.log("input", input, output)
 
 			if (i > 0) info += "\n\n";
-
-			try {
-				info += "input: " + JSON.stringify(input) + "\n"
-						+ "output: " + JSON.stringify(output);
-			} catch (e) {
-				console.log("input", input, output, task["input-type"], task["output-type"], input1, output1, task)
-				console.log(e);
-				throw(e);
-			}
-
+			info += "input: " + JSON.stringify(input) + "\n"
+					+ "output: " + JSON.stringify(output);
 
 			if (!check_example(output, task.io_examples[i].output, task)) {
 				// console.log("does not work", JSON.stringify(input), JSON.stringify(output), JSON.stringify(task.io_examples[i].output));
@@ -318,6 +327,7 @@ function findValidProgramCached(state, config, show) {
 
 		if (task.total_correct > task.best_total_correct) {
 			task.best_total_correct = task.total_correct;
+			task.best_total_correct_program = new_program;
 		}
 
 		if (show || state.programs_n % log_iterations == 0 || stop_generation) {
@@ -347,10 +357,12 @@ function findValidProgramCached(state, config, show) {
 					+ '\n' + javascript + '\n' + log_string;
 				$("#log").html(log_string);
 				config.solved = true;
+				config.task.solved = true;
+				config.task.program = new_program;
+				config.task.js = javascript;
 			}
 
 			console.log("Found program #" + state.programs_n, state);
-
 
 			stop_processing = true;
 			return;
@@ -373,6 +385,7 @@ function findValidProgramCached(state, config, show) {
 }
 
 function check_example(output1, output2, task) {
+
 	if (task["output-type"] == "int") {
 		if (output1 != output2) {
 			return false;
@@ -395,7 +408,7 @@ function check_example(output1, output2, task) {
 				}
 			}
 		} else {
-			for (let i = 0; i < _.min(output1.length, output2.length); i++) {
+			for (let i = 0; i < Math.min(output1.length, output2.length); i++) {
 				if (output1[i] != output2[i]) {
 					return false;
 				} else {

@@ -58,7 +58,7 @@ function json2jsGenerateString(obj, expressions, offset, inline = false, guard =
 
 	} else if (obj[0] == "block") {
 
-		string += indent(offset) + "// block\n";
+		// string += indent(offset) + "// block\n";
 		for (let i = 1; i < obj.length; i++) {
 			let add_string = "";
 			add_string += json2jsGenerateString(obj[i], expressions, offset, inline, guard);
